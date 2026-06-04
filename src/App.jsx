@@ -48,12 +48,35 @@ function App() {
 
             {/* Mobile hamburger */}
             <button className='md:hidden p-2' onClick={() => setMenuOpen(!menuOpen)} aria-label='Toggle menu'>
-                
+                <div className={'w-6 h-0.5 transition-all ${scrolled ? "bg-white" : "bg-[#1a3d2b]"}'}></div>
             </button>
 
           </div>
 
         </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className='md:hidden bg-[#1a3d2b] px-6 pb-6 pt-2 flex flex-col gap-4'>
+            {['Browse', 'How it works', 'About'].map((link)=> (
+              <a key={link}
+              href={'{link.toLowerCase}'}
+              className='text-white text-base font-medium hover:text-[#f5a623] transition-colors' 
+              onClick={() => setMenuOpen(false)}
+              >
+                {link}
+              </a>
+            ))}
+            <div className='flex gap-3 mt-2'>
+              <a href='/login' className='flex-1 text-center text-sm font-semibold py-2 rounded-full border-2 border-white text-white hover:bg-white hover:text-[#1a3d2b] transition-all'>
+              Log in
+              </a>
+              <a href='/signup' className='flex-1 text-center text-sm font-semibold py-2 rounded-full bg-[#f5a623] text-[#1a1a1a] hover:bg-amber-500 transition-all'>
+              Get Started
+              </a>
+            </div>
+          </div>
+        )}
 
       </nav>
     </div>
