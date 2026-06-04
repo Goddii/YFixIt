@@ -27,6 +27,15 @@ function App() {
                 YFixIt
               </span>
             </a>
+            {/* Desktop nav links */}
+            <div className='hidden md:flex items-center gap-8'>
+              {['Browse', 'How it works', 'About'].map((link)=> (
+                <a key={link} href={'#${link.toLowerCase().replace(/ /g, "-")}'} className={'text-sm font-medium transition-colors hover:text-[#f5a623] ${ scrolled ? "text-white":"text-[#1a3d2b]"}'}>
+                  {link}
+                </a>
+              ))}
+            </div>
+
           </div>
 
         </div>
