@@ -16,7 +16,22 @@ function App() {
   return (
     <div className='font-sans bg-[#f7f3ed] text-[#1a1a1a] min-h-screen'>
       
-      
+      {/* Navbar */}
+      <nav className={'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-[#1a3d2b] shadow-lg" : "bg-transparent"}'}>
+        <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='flex items-center justify-between h-16'>
+            {/* logo */}
+            <a href='#' className='flex items-center gap-2'>
+              <span className='text-[#f5a623] text-2xl'>⚙</span>
+              <span className={'font-extrabold text-xl tracking-tight transition-colors ${ scrolled ? "text-white" : "text-[#1a3d2b]"}'}>
+                YFixIt
+              </span>
+            </a>
+          </div>
+
+        </div>
+
+      </nav>
     </div>
   )
 }
