@@ -36,6 +36,21 @@ function App() {
               ))}
             </div>
 
+            {/* CTA button */}
+            <div className='hidden md:flex items-center gap-3'>
+              <a href='/login' className='text-sm font-semibold px-4 py-2 rounded-full border-2 border-[#1a3d2b] text-[#1a3d2b] hover:bg-[#1a3d2b] hover:text-white transition-all' style={{borderColor: scrolled ? "white" : "#1a3d2b", color: scrolled ? "white" : '#1a3d2b'}}>
+              Log in
+              </a>
+              <a href='/signup' className='text-sm font-semibold px-4 py-2 rounded-full bg-[#f5a623] text-[#1a1a1a] hover:bg-amber-500 transition-all shadow'>
+                Get Started
+              </a>
+            </div>
+
+            {/* Mobile hamburger */}
+            <button className='md:hidden p-2' onClick={() => setMenuOpen(!menuOpen)} aria-label='Toggle menu'>
+                
+            </button>
+
           </div>
 
         </div>
