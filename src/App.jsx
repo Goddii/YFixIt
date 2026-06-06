@@ -152,17 +152,60 @@ function App() {
                 <p className='text-xs text-gray-400 mt-0.5'>Fair - Thika Town</p>
                 <p className='text-[#f5a623] font-extrabold mt-2 text-sm'> ksh 1,200</p>
                 <span className='inline-block mt-1 text-[10px] bg-yellow-100 text-yellow-700 font-semibold px-2 py-0.5 rounded-full'>Fair</span>
-              </div>
-    
-          
+              </div>  
             </div>
-
           </div>
-
-          
-        </div>
+        </div> 
         
-     
+      </section>
+      {/* how it works section  */}          
+      <section id='how-it-works' className='py-24 bg-white'>
+        <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='text-center mb-16'>
+            <span className='text-[#f5a623] font-bold uppercase tracking-widest text-xs'>Simple Process</span>
+            <h2 className='text-3xl sm:text-4xl font-extrabold mt-2 text-[#1a1a1a]'>How YFixIt works</h2>
+            <p className='text-gray-500 mt-3 max-w-xl mx-auto'>Whether you're clearing out old devices or hunting for a spare part- we've got you</p>
+          </div>
+          {/* Two columns : Sellers | Buyers */}
+          <div className='grid md:grid-cols-2 gap-10'>
+            {/* sellers */}
+            <div className='bg-[#1a3d2b] rounded-3xl p-8 text-white'>
+              <p className='text-[#f5a623] font-bold uppercase tracking-widest text-xs mb-4'>For Sellers</p>
+              <h3 className='text-2xl font-extrabold mb-8'>List your item in minutes</h3>
+              {[
+                {step: '01', title: 'Creaate a Seller Account', desc: 'Sign up with your phone number or email -takes 60 seconds'},
+                {step: '02', title: 'Post your Item', desc:'Add photos, set  price, pick a condition (Broken /Fair /Good) and your location'},
+                {step: '03', title: 'Get paid to your bank account or mpesa', desc:'When buyer pays, funds land in your account'},
+              ].map(({step, title, desc}) => (
+                <div key={step} className='flex gap-4 mb-6 last:mb-0'>
+                  <span className='text-[#f5a623] font-extrabold text-lg w-8 shrink-0'>{step}</span>
+                  <div>
+                    <p className='font-bold text-base'> {title} </p>
+                    <p className='text-white/60 text-sm mt-1'>{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Buyers */}
+            <div className='bg-[#f7f3ed] rounded-3xl p-8 border-2 border-[#e5ddd1]'>
+              <p className='text-[#1a3d2b] font-bold uppercase tracking-widest text-xs mb-4'>For Buyers</p>
+              <h3 className='text-2xl font-extrabold text-[#1a1a1a] mb-8'>Find exactly what you need</h3>
+              {[
+                {step: '01', title: 'Browse or Search', desc: 'Filter by category, condition, location, or price range'},
+                {step: '02', title: 'Contact the Seller', desc: 'Message them directly through the platform before committing'},
+                {step: '03', title: 'Pay Safely', desc: 'Checkout via bank or mpesa,no cash, no-risks, no stress'},
+              ].map(({step, title, desc}) =>(
+                <div key={step} className='flex gap-4 mb-6 last:mb-0'>
+                  <span className='text-[#1a3d2b] font-extrabold text-lg w-8 shrink-0'>{step}</span>
+                  <div>
+                    <p className='font-semibold text-base text-[#1a1a1a]'>{title}</p>
+                    <p className='text-gray-500 text-sm mt-1'>{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
       </section>
     </div>
