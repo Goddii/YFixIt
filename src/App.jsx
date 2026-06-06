@@ -82,6 +82,11 @@ function App() {
 
       {/* Hero */}
       <section className='relative min-h-screen flex items-center overflow-hidden'>
+        <div className='absolute inset-0 -z-10'>
+          <div className='absolute top-0 right-0 w-[55%] h-full bg-[#1a3d2b] clip-hero'/>
+          <div className='absolute bottom-24 right-[30%] w-40 h-40 rounded-full bg-[#f5a623] opacity-20 blur-2xl'/>
+          <div className='absolute top-32 left-[10%] w-24 h-24 rounded-full bg-[#1a3d2b] opacity-10 blur-2xl' />
+        </div>
         <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-24 pb-20'>
           <div className='grid lg:grid-cols-2 gap-12 items-center'>
             {/* left copy */}
@@ -103,9 +108,58 @@ function App() {
                 <a href='/signup?role=seller' className='text-center px-8 py-4 rounded-full bg-[#1a3d2b] text-white font-bold text-base hover:bg-[#14301f] transition-all shadow-lg hover:shadow-xl hover:translate-y-0.5'>
                 Start Selling
                 </a>
+                <a href='/signup?role=buyer'
+                className='text-center px-8 py-4 rounded-full border-2 border-[#1a3d2b] text-[#1a3d2b] font-bold text-blue hover:bg-[#1a3d2b] hover:text-white transition-all'>
+                  Browse Items
+                </a>
+              </div>
+              {/* Trust badges */}
+              <div className='flex flex-wrap gap-6 mt-10'>
+                {[
+                  {icon: '🔒', label: 'Online Payments'},
+                  {icon: '📍', label: 'Nairobi & Beyond'},
+                  {icon: '⚡', label: 'List in 2 minutes'},
+                ].map(({icon, label}) => (
+                  <div key= {label} className='flex items-center gap-2 text-sm text-gray-500'>
+                    <span className='text-lg'> {icon} </span>
+                    <span> {label} </span>
+                  </div>
+                ))}
               </div>
             </div>
+            {/* right floating product card     */}
+            <div className='relative hidden lg:flex justify-center items-center h-[480px]'>
+              {/* card 1 top left */}
+              <div className='absolute top-8 left-4 w-44 bg-white rounded-2xl shadow-xl p-4 rotate-[-4deg] hover:rotate-0 transition-transform duration-300'>
+                <div className='bg-[#e8f0eb] rounded-xl h-28 flex flex items-center justify-center text-4xl mb-3'>📱</div>
+                <p className='font-bold text-sm text-[#1a1a1a]'> Samsung S21 Screen</p>
+                <p className='text-xs text-gray-400 mt-0.5'>Cracked - Nairobi CBD</p>
+                <p className='text-[#f5a623] font-extrabold mt-2 text-sm'>Ksh 2,500</p>
+                <span className='inline-block mt-1 text-[10px] bg-red-100 text-red-600 font-semibold px-2 pt-0.5 rounded-full'>Broken</span>
+              </div>
+              {/* card 2 center */}
+              <div className='absolute top-20 right-8 w-44 bg-white rounded-2xl shadow-xl rotate-[3deg] hover:rotate-0 transition-transform duration-300'>
+                <div className='bg-[#fef3e2] rounded-xl h-28 flex items-center justify-center text-4xl mb-3'>💻</div>
+                  <p className='font-bold text-sm text-[#1a1a1a] px-1.5'>Dell Laptop Charger</p>
+                  <p className='text-xs text-gray-400 mt-0.5 px-1.5'>Good - Westlands</p>
+                  <p className='text-[#f5a623] font-extrabold mt-2 text-sm px-1.5'>Ksh 800</p>
+                  <span className='inline-block mt-1 text-[10px] bg-green-100 text-green-700 font-semibold px-2 py-0.5 mb-0.5 rounded-full'>Good</span>
+              </div>
+              {/* card 3 bottom */}
+              <div className='absolute bottom-1 left-16 w-44 bg-white rounded-2xl shadow-xl p-4 rotate-[2deg] hover:rotate-0 transition-transform duration-300'>
+                <div className='bg-[#e8f0eb] rounded-xl h-28 flex items-center justify-center text-4xl mb-3'>🎧</div>
+                <p className='font-bold text-sm text-[#1a1a1a]'> Sony Headphones</p>
+                <p className='text-xs text-gray-400 mt-0.5'>Fair - Thika Town</p>
+                <p className='text-[#f5a623] font-extrabold mt-2 text-sm'> ksh 1,200</p>
+                <span className='inline-block mt-1 text-[10px] bg-yellow-100 text-yellow-700 font-semibold px-2 py-0.5 rounded-full'>Fair</span>
+              </div>
+    
+          
+            </div>
+
           </div>
+
+          
         </div>
         
      
