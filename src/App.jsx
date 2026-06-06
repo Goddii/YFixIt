@@ -227,7 +227,25 @@ function App() {
         </div>
       </section>
       {/* cta banner section */}
-      
+      <section className='py-24 bg-white'>
+        <div className='max-w-2xl mx-auto px-4 text-center'>
+          <h2 className='text-3xl sm:text-4xl font-extrabold mb-4 text-[#1a1a1a]'>
+            Ready to buy or sell
+          </h2>
+          <p className='text-gray-500 mb-8'>
+            Join Kenyans already turning broken electronics into cash — or finding great deals on parts and devices.
+          </p>
+          <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+            <a href='/signup?role=seller' className='px-8 py-4 rounded-full bg-[#1a3d2b] text-white font-bold hover:bg-[#14301f] transition-all shadow-lg'>      
+              Sell an item
+            </a>
+            <a href='/signup?role=buyer' className='px-8 py-4 rounded-full bg-[#f5a623] text-[#1a1a1a]  font-bold hover:bg-amber-500 transition-all shadow-lg'>      
+              Start Browsing
+            </a>
+          </div>
+        </div>
+
+      </section>
     </div>
   )
 }
