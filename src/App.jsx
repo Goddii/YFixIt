@@ -208,6 +208,26 @@ function App() {
         </div>
 
       </section>
+      {/* Stats section */}
+      <section className='bg-[#f56a23] py-14'>
+        <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-8 text-center'>
+            {[
+              {value: 'Free', label: 'To list an item'},
+              {value: '2min', label: 'Average listing time'},
+              {value: 'Mpesa, bank', label:' Secure payments'},
+              {value: 'Kenya', label: 'Nationwide'}
+            ].map(({value, label})=> (
+              <div key={label}>
+                <p className='text-3xl font-extrabold text-[#1a3d2b]'> {value} </p>
+                <p className='text-sm text-[#1a3d2b]/70 mt-1 font-medium'>{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* cta banner section */}
+      
     </div>
   )
 }
