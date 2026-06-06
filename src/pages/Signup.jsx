@@ -165,8 +165,18 @@ export default function Signup() {
                           </div>
                           {/* terms   */}
                           <p className="text-xs text-gray-400 text-center mt-1">
-                            
+                            By signing up you agree to our {' '}
+                            <a href="#" className="text-[#1a3d2b] font-semibold hover:text-[#f5a623]">Terms of Service</a>
+                            {' '} and {' '}
+                            <a href="#" className="text-[#1a3d2b] font-semibold hover:text-[#f5a623]">Privacy Policy</a>
                           </p>
+                          {/* submit */}
+                          <button 
+                          type="submit"
+                          className="w-full py-3.5 rounded-xl bg-[#f5a623] text-[#1a1a1a] mt-2 font-bold text-sm hover:bg-amber-500 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                          >
+                            Create {role === 'seller' ? 'Seller' : 'Buyer'} Account →
+                          </button>
                         </div>
                     </form>
                 </div>
