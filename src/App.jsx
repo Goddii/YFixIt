@@ -246,6 +246,33 @@ function App() {
         </div>
 
       </section>
+
+      {/* footer */}
+      <footer className='bg-[#1a3d2b] text-white py-12'>
+            <div className='max-w-6xl max-auto px-4 sm:px-6 lg:px-8'>
+              <div className='flex flex-col md:flex-row justify-between items-start gap-8'>
+                {/* brand */}
+                <div>
+                  <div className='flex items-center gap-2 mb-3'>
+                    <span className='text-[#f5a623] text-2xl'>⚙</span>
+                    <span className='font-extrabold text-xl'>YFixIt</span>
+                  </div>
+                  <p className='text-white/50 text-sm max-w-xs'>
+                    Kenya's marketplace for broken, second-hand, and refurbished electronics.
+                  </p>
+                </div>
+                {/* links */}
+                <div className='grid grid-cols-2 gap-x-16 gap-y-2 text-sm text-white/60'>
+                  {['Browse Listings', 'Sell an item', 'How it works', 'About Us', 'Contact Us', 'Privacy Policy'].map((link) => (
+                    <a key={link} href='#' className='hover:text-[#f5a623] transition-colors'>{link}</a>
+                  ))}
+                </div>
+              </div>
+              <div className='mt-10 pt-6 border-t border-white/10 text-center text-white/30 text-xs'>
+                  © {new Date().getFullYear()} YFixIt. Built in Kenya 🇰🇪
+              </div>
+            </div>
+      </footer>
     </div>
   )
 }
