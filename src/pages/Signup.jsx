@@ -179,7 +179,21 @@ export default function Signup() {
                           </button>
                         </div>
                     </form>
+                    {/* login redirect */}
+                    <p className="text-center text-sm text-gray-500 mt-6">
+                        Already have an account?{' '}
+                        <Link to='/login' className="text-[#1a3d2b] font-bold hover:text-[#f5a623] transition-colors">
+                        Log in
+                        </Link>
+                    </p>
                 </div>
+                {/* back home */}
+                <p className="text-center mt-5">
+                    <Link to='/' className="text-xs text-gray-400 hover:text-[#1a3d2b] transition-colors">
+                         ← Back to homepage
+                    </Link>
+                </p>
+
             </div>
         </div>
     )
