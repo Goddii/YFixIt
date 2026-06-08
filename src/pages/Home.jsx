@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
-
+import { Link } from 'react-router-dom'
 
 function Home() {
 
@@ -31,9 +31,20 @@ function Home() {
             {/* Desktop nav links */}
             <div className='hidden md:flex items-center gap-8'>
               {['Browse', 'How it works', 'About'].map((link)=> (
-                <a key={link} href={'#${link.toLowerCase().replace(/ /g, "-")}'} className={'text-sm font-medium transition-colors hover:text-[#f5a623] ${ scrolled ? "text-white":"text-[#1a3d2b]"}'}>
+                link === 'Browse' ? (
+                  <Link
+                  key={link}
+                  to='/browse'
+                  className={`text-sm font-medium transition-colors hover:text-[#f5a623] ${scrolled ? "text-white" : "text-[#1a3d2b]"}`}
+                  >
+                    {link}
+                  </Link>
+                ) : (
+                <a key={link} href={`#${link.toLowerCase().replace(/ /g, "-")}`} 
+                className={'text-sm font-medium transition-colors hover:text-[#f5a623] ${ scrolled ? "text-white":"text-[#1a3d2b]"}'}>
                   {link}
                 </a>
+                )
               ))}
             </div>
 

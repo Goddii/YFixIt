@@ -147,6 +147,7 @@ export default function Signup() {
                             name="password"
                             value={form.password}
                             placeholder="Min. 6 characters"
+                            onChange={handleChange}
                             className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#1a3d2b] focus:outline-none text-sm transition-colors"
                             />
                           </div>
