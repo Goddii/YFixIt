@@ -37,7 +37,18 @@ export default function Browse() {
 
 
     const filtered = LISTINGS.filter((item) => {
-        const matchSearch 
+        const matchSearch = item.title.toLowerCase().includes(search.toLowerCase())
+        const matchCategory = category === 'All' || item.category === category;
+        const matchCondition = condition === 'All' || item.condition === condition;
+        const matchLoction = location === 'All' || item.location === location;
+        const matchPrice = item.price <= maxPrice;
+        return matchSearch && matchCategory && matchCondition && matchLoction && matchPrice;
+
+    })
+    .sort((a,b) => {
+        if (sortBy === 'price-asc') return a.price - b.price;
+        if (sortBy === 'price-desc') return b.price - a.price
+        return 0;
     })
 
 
