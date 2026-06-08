@@ -309,6 +309,34 @@ export default function Browse() {
                     </main>
                 </div>
             </div>
+            {/* mobile filter drawer */}
+            {drawerOpen && (
+                <div className="fixed inset-0 z-50 lg:hidden">
+                    {/* backdrop */}
+                    <div className="absolute inset-0 bg-black/40"
+                    onClick={() => setDrawerOpen(false)}
+                    />
+                    {/* drawer panel */}
+                    <div className="flex items-center justify-between mb-6">
+                        <p className="font-extrabold text-[#1a1a1a] text-lg">Filters</p>
+                        <button
+                        onClick={()=> setDrawerOpen(false)}
+                        className="text-gray-400 hover:text-gray-700 text-xl font-bold"
+                        >
+                          ✕  
+                        </button>
+                    </div>
+                    <FilterPanel />
+                    <button
+                    onClick={() => setDrawerOpen(false)}
+                    className="mt-6 w-full py-3 rounded-xl bg-[#1a3d2b] text-white font-bold text-sm"
+                    >
+                        Show {filtered.length} Results
+                    </button>
+
+                    
+                </div>
+            )}
         </div>
         
     )
