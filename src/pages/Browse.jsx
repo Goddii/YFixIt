@@ -51,5 +51,13 @@ export default function Browse() {
         return 0;
     })
 
+    function resetFilters() {
+        setCategory('All')
+        setCondition('All')
+        setLocation('All')
+        setMaxPrice(50000)
+        setSearch('')
+    }
+
 
 }
