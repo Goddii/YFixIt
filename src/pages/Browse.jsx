@@ -247,8 +247,46 @@ export default function Browse() {
                     </aside>
 
                     {/* product grid */}
-                    <main>
-                        
+                    <main className="flex-1">
+                        {filtered.length === 0 ? (
+                            <div className="text-center py-24">
+                                <p className="text-5xl mb-4">🔍</p>
+                                <p className="font-bold text-lg text-[#1a1a1a]">No Listings found</p>
+                                <p className="text-gray-400 text-sm mt-1">Try adjusting your filters or search term</p>
+                                <button
+                                onClick={resetFilters}
+                                className="mt-4 text-sm font-semibold text-[#1a3d2b] hover:text-[#f5a623] transition-colors"
+                                >
+                                   Clear all filters → 
+
+                                </button>
+                            </div>
+
+                        ):(
+                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                                {filtered.map((item) => (
+                                    <Link
+                                    key={item.id}
+                                    to={`/listing/${item.id}`}
+                                    className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 overflow-hidden group"
+                                    >
+                                    {/* image-area */}
+                                    <div className="bg-[#f7f3ed] h-44 flex items-center justify-center text-6xl group:hover:bg-[#eee8df] transition-colors">
+                                        {item.image}
+                                    </div>
+                                    {/* details */}
+                                    <div className="p-4">
+                                        <div className="flex items-start justify-between gap-2 mb-1">
+                                            <h3 className="font-bold text-[#1a1a1a] text-sm leading-ssnug">{item.title}</h3>
+                                        </div>
+
+                                    </div>
+
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+
                     </main>
                 </div>
             </div>
