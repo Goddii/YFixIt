@@ -147,7 +147,64 @@ export default function Browse() {
             )}
         </div>
     );
-    
+    return (
+        <div className="min-h-screen bg-[#f7f3ed]">
+            {/* top nav */}
+            <nav className="bg-[#1a3d2b] sticky top-0 z-40 shadow-md">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+                    <Link to='/' className="flex items-center gap-2">
+                        <span className="text-[#f5a623] text-xl">⚙</span>
+                        <span className="font-extrabold text-lg text-white">YFixIt</span>
+                    </Link>
+
+                    {/* search bar-desktop */}
+                    <div className="hidden md:flex flex-1 max-w-lg mx-8">
+                        <div className="relative w-full">
+                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
+                           <input 
+                           type="text"
+                           value={search}
+                           onChange={(e) => setSearch(e.target.value)}
+                           placeholder="Search listings..."
+                           className="w-full pl-9 pr-4 py-2 rounded-full bg-white/100 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:bg-white/20 text-sm"
+                           /> 
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <Link
+                        to='/login'
+                        className="hidden md:block text-white/80 hover:text-white text-sm font-medium"
+                        >
+                            Log in
+                        </Link>
+                        <Link
+                        to='/signup?role=seller'
+                        className="text-xs sm:text-sm font-bold px-3 py-2 rounded-full bg-[#f5a623] text-[#1a1a1a] hover:bg-amber-500 transition-all"
+                        >
+                           + List Item 
+                        </Link>
+                    </div>
+
+                </div>
+                {/* mobile search */}
+                <div className="md:hidden px-4 pb-3">
+                    <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
+                        <input 
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Search listings"
+                        className="w-full pl-9 pr-4 py-2.5 rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
+                        />
+                    </div>
+                </div>
+            </nav>
+        </div>
+        
+    )
+
 
 
 }
