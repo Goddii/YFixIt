@@ -35,7 +35,7 @@ function Home() {
                   <Link
                   key={link}
                   to='/browse'
-                  className={`text-sm font-medium transition-colors hover:text-[#f5a623] ${scrolled ? "text-white" : "text-[#1a3d2b]"}`}
+                  className={`text-sm font-medium transition-colors hover:text-[#f5a623] ${scrolled ? "text-black" : "text-[#1a3d2b]"}`}
                   >
                     {link}
                   </Link>

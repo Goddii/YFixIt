@@ -59,5 +59,95 @@ export default function Browse() {
         setSearch('')
     }
 
+    const activeFilterCount = [
+        category !== 'All',
+        condition !== 'All',
+        location !== 'All',
+        maxPrice !== 50000,
+    ].filter(Boolean).length
+
+
+    // shared filter panel (used in sidebar)
+    const FilterPanel = () => (
+        <div className="flex flex-col gap-7">
+            {/* category */}
+            <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Category</p>
+                <div className="flex flex-col gap-1">
+                    {CATEGORIES.map((cat) => (
+                        <button
+                        key={cat}
+                        onClick={() => setCategory(cat)}
+                        className={`text-left px-3 py-2 rounded-xl text-sm font-medium transition-all ${category === cat ? "bg-[#1a3d2b] text-white": "text-gray-600 hover:bg-[#f7f3ed]"}`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+
+                </div>
+            </div>
+            {/* condition    */}
+            <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Condition</p>
+                <div className="flex flex-col gap-1">
+                    {CONDITIONS.map((cond) => (
+                        <button
+                        key={cond}
+                        onClick={() => setCondition(cond)}
+                        className={`text-left px-3 py-2 rounded-xl text-sm font-medium transition-all ${ condition === cond ? "bg-[#1a3d2b] text-white" : "text-gray-600 hover:bg-[#f7f3ed]"}`}
+                        >
+                            {cond === 'All' ? 'All Conditions' : cond}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            {/* price range         */}
+            <div>
+                <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Max Price</p>
+                    <span className="text-sm font-bold text-[#1a3d2b]">Ksh {maxPrice.toLocaleString()}</span>
+                </div>
+                <input 
+                type="range"
+                min = {0}
+                max={50000}
+                step={500}
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                className="w-full accent-[#1a3d2b]"
+                />
+                <div className="flex justify-between text-xs text-gray-400 mt-1">
+                    <span>Ksh 0</span>
+                    <span>Ksh 50,000</span>
+                </div>
+            </div>
+            {/* location */}
+            <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Location</p>
+                <select
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl border-2 border-gray-200 focus:border-[#1a3d2b] focus:outline-none text-sm bg-white"
+                >
+                    {LOCATIONS.map((loc) => (
+                        <option key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</option>
+                    ))}
+
+                </select>
+            </div>
+
+            {/* reset */}
+            {activeFilterCount > 0 && (
+                <button
+                onClick={resetFilters}
+                className="text-sm text-red-500 hover:text-red-700 font-semibold text-left transition-colors"
+                >   
+                  ✕ Clear all filters  
+                </button>
+            )}
+        </div>
+    );
+    
+
 
 }
