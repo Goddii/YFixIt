@@ -201,6 +201,57 @@ export default function Browse() {
                     </div>
                 </div>
             </nav>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+                {/* page header */}
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 className="text-xl font-extrabold text-[#1a1a1a]">Browse Listings</h1>
+                        <p className="text-gray-500 text-sm mt-0.5">
+                            {filtered.length} item{filtered.length !== 1 ? "s": ""} found
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        {/* sort */}
+                        <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="text-sm px-3 py-2 rounded-xl border-2 border-gray-200 bg-white focus:border-[#1a3d2b] focus:outline-none"
+                        >
+                            <option value="newest">Newest First</option>
+                            <option value="price-asc">Price: Low → High</option>
+                            <option value="price-desc">Price: High → Low</option>
+                        </select>
+                        {/* MOBILE FILTER */}
+                        <button
+                        onClick={() => setDrawerOpen(true)}
+                        className="lg:hidden flex items-center gap-2 text-sm font-semibold px-3 py-2 rounded-xl bg-[#1a3d2b] text-white"
+                        >
+                            ⚙ Filters
+                            {activeFilterCount > 0 && (
+                                <span className="bg-[#f5a623] text-[#1a1a1a] text-xs font-bold px-1.5 py-0.5 rounded-full">
+                                    {activeFilterCount}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+                </div>
+                <div className="flex gap-6">
+                    {/* sidebar */}
+                    <aside className="hidden lg:block w-56 shrink-0">
+                        <div className="bg-white rounded-2xl shadow-sm p-5 sticky top-20">
+                            <p className="font-extrabold text-[#1a1a1a] mb-5">Filters</p>
+                            <FilterPanel />
+                        </div>
+
+                    </aside>
+
+                    {/* product grid */}
+                    <main>
+                        
+                    </main>
+                </div>
+            </div>
         </div>
         
     )
