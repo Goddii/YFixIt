@@ -57,6 +57,35 @@ export default function ListingDetail() {
                 </div>
 
             </nav>
+            <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+                {/* breadcrumb */}
+                <div className='flex items-center gap-2 text-xs text-gray-400 mb-6'>
+                    <Link to='/' className='hover-[#1a3d2b] transition-colors'>Home</Link>
+                    <span>/</span>
+                    <Link to='/browse' className='hover:text-[#1a3d2b] transition-colors'>Browse</Link>
+                    <span>/</span>
+                    <span className='text-[#1a1a1a] font-medium'>{item.title}</span>
+                </div>
+                <div className='grid lg:grid-cols-5 gap-8'>
+                    {/* left image details */}
+                    <div className='lg:col-span-3 flex flex-col gap-6'>
+                        {/* main image */}
+                        <div className='bg-white rounded-3xl shadow-sm overflow-hidden'>
+                            <div className='bg-[#f7f3ed] h-72 sm:h-96 flex items-center justify-center text-8xl sm:text-9xl'>
+                                {item.image}
+                            </div>
+                            {/* Thumbnail strip placeholder */}
+                            <div className='flex gap-3 p-4'>
+                                {[1,2,3].map((i) => (
+                                    <div key={i} className={`w-16 h-16 rounded-xl bg-[#f7f3ed] flex items-center justify-center text-2xl cursor-pointer transition-all ${i === 1 ? "bg-[#e8f0eb] ring-2 ring-[#1a3d2b]": "bg-[#f7f3ed] hover:bg-[#e8f0eb]" }  `}>
+                                        {item-image}               
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     )
