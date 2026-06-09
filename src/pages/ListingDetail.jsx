@@ -48,6 +48,7 @@ export default function ListingDetail() {
     const cond = CONDITION_STYLES[item.condition]
 
     // related listings
+    const related = LISTINGS.filter((l) => l.category === item.category && l.id !== item.id).slice(0, 3)
     
     return (
         <div className='min-h-screen bg-[#f7f3ed]'>
@@ -175,9 +176,58 @@ export default function ListingDetail() {
                                 </p>
                             </div>
                         </div>
-                        
+                        {/* seller card */}
+                        <div className='bg-white rounded-3xl shadow-sm p-5'>
+                            <p className='text-xs font-bold uppercase tracking widest text-gray-400 mb-3'>
+                                Seller
+                            </p>
+                            <div className='flex items-center gap-3'>
+                                <div className='w-10 h-10 rounded-full bg-[#1a3d2b] flex items-center justify-center text-white font-bold text-sm'>
+                                    {item.seller.charAt(0)}
+                                </div>
+                                <div>
+                                    <p className='font-bold text-sm text-[#1a1a1a]'> {item.seller}</p>
+                                    <p className='text-xs text-gray-400'>Member -YFixIt seller</p>
+                                </div>
+                            </div>
+                            <Link to='/browse' className='mt-4 block text-center text-xs font-semibold text-[#1a3d2b] hover:text-[#f5a623] transition-colors'>
+                                View all listings by this seller
+                            </Link>
+                        </div>
                     </div>
                 </div>
+                {/* related listings */}
+                {related.length > 0 && (
+                    <div className='mt-12'>
+                        <h2 className='font-extrabold text-[#1a1a1a] text-xl mb-5'>
+                            More in {item.category}
+                        </h2>
+                        <div className='grid grid-cols-1 sm:grid-cols-3 gap-5'>
+                            {related.map((rel) => (
+                                <Link key={rel.id}
+                                to={`/listing/${rel.id}`}
+                                className='bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 overflow-hidden group'
+                                >
+                                    <div className='bg-[#f7f3ed] h-36 flex items-center justify-center text-5xl group-hover:bg-[#eee8df] transition-colors'>
+                                        {rel.image}
+                                    </div>
+                                    <div className='p-4'>
+                                        <div className='flex items-start justify-between gap-2 mb-1'>
+                                            <p className='font-bold text-sm text-[#1a1a1a] leading-snug'> {rel.title}</p>
+                                            <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ${CONDITION_STYLES[rel.condition].badge}`}>
+                                                {rel.condition}
+                                            </span>
+                                        </div>
+                                        <p className='text-xs text-gray-400 mb-2'>📍 {rel.location} </p>
+                                        <p className='text-[#f5a623] font-extrabold text-sm'>
+                                            ksh {rel.price.toLocaleString()}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
 
         </div>
