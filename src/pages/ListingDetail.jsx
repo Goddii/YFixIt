@@ -39,7 +39,25 @@ export default function ListingDetail() {
     return (
         <div className='min-h-screen bg-[#f7f3ed]'>
             {/* navbar */}
-            
+            <nav className='bg-[#1a3d2b] sticky top-0 z-40 shadow-md'>
+                <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between'>
+                    <Link to='/' className='flex items-center gap-2'>
+                        <span className='text-[#f5a623] text-xl'>⚙</span>
+                        <span className='font-extrabold text-lg text-white'>YFixIt</span>
+                    </Link>
+                    <div className='flex items-center gap-3'>
+                        <Link to='/browse' className='text-white/70 hover:text-white text-sm font-medium transition-colours'>
+                            ← Browse
+                        </Link>
+                        <Link to='/signup?role=seller' className='text-xs sm:text-sm font-bold px-3 py-2 rounded-full bg-[#f5a623] text-[#1a1a1a] hover:bg-amber-500 transition-all'>
+                            + List Item    
+                        </Link>
+                        
+                    </div>
+                </div>
+
+            </nav>
+
         </div>
     )
 
