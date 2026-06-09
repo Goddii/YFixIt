@@ -152,8 +152,30 @@ export default function ListingDetail() {
                                 <button className='w-full py-3.5 rounded-xl bg-[#f5a623] text-[#1a1a1a] font-bold text-sm hover:bg-amber-500 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5'>
                                     Buy Now - Ksh {item.price.toLocaleString()}
                                 </button>
+
+                                {/* message seller day20 this open's chat */}
+                                <a href={`https://wa.me/254${item.phone.slice(1)}?text=Hi, I saw your listing for "${item.title}" on YFixIt. Is it still available?`}
+                                target='_blank'
+                                rel='noreferrer'
+                                className='w-full py-3.5 rounded-xl border-2 border-[#1a3d2b] hover:text-white transition-all'
+                                >
+                                    💬 Message Seller 
+                                </a>
+                                {/* call */}
+                                <a href={`tel:+254{item.phone.slice(1)}`}
+                                className='w-full py-3 rounded-xl bg-[#f7f3ed] text-gray-600 font-semibold text-sm text-center hover:bg-[#e8f0eb] transition-all'
+                                >
+                                     📞 Call Seller
+                                </a>
+                            </div>
+                            {/* safety tip */}
+                            <div className='mt-5 bg-[#f7f3ed] rounded-xl px-4 py-3'>
+                                <p className='text-xs text-gray-500 leading-relaxed'>
+                                   🔒 <span className='font-semibold'> Stay safe: </span> Send money only after verification of item 
+                                </p>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
