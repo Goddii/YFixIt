@@ -109,7 +109,51 @@ export default function ListingDetail() {
                             </div>
                         </div>
                         {/* item details table */}
-                        <div className='bg-white rounded-3xl shadow-sm p-6 '></div>
+                        <div className='bg-white rounded-3xl shadow-sm p-6 '>
+                            <h2 className='font-extrabold text-[#1a1a1a] text-lg mb-4'>Item details</h2>
+                            <div className='grid grid-cols-2 gap-y-3'>
+                                {[
+                                    { label: "Category", value: item.category },
+                                    { label: "Condition", value: item.condition },
+                                    { label: "Location", value: item.location },
+                                    { label: "Listed", value: item.posted },
+                                ].map(({label, value}) => (
+                                    <div key={label}>
+                                        <p className='text-xs text-gray-400 font-medium'> {label}</p>
+                                        <p className='text-sm font-semibold text-[#1a1a1a] mt-0.5'> {value}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    {/* right price + contact */}
+                    <div className='lg:col-span-2 flex flex-col gap-5'>
+                        {/* price card */}
+                        <div className='bg-white rounded-2xl shadow-sm p-6 sticky top-20'>
+                            <div className='flex items-start justify-between mb-2'>
+                                <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${cond.badge}`}>
+                                    {item.condition}
+                                </span>
+                                <span className='text-xs text-gray-400'>
+                                    {item.posted}
+                                </span>
+                            </div>
+                            <h1 className='font-extrabold text-[#1a1a1a] text-xl leading-snug mt-3 mb-1'>{item.title}</h1>
+                            <p className='text-xs text-gray-400 mb-4'>
+                                📍 {item.location} · {item.category}
+                            </p>
+                            <p className='text-3xl font-extrabold text-[#f5a623] mb-6'>
+                                ksh {item.price.toLocaleString()}
+                            </p>
+
+                            {/* cta buttons */}
+                            <div className='flex flex-col gap-3'>
+                                {/* buy now - triggers api for payment */}
+                                <button className='w-full py-3.5 rounded-xl bg-[#f5a623] text-[#1a1a1a] font-bold text-sm hover:bg-amber-500 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5'>
+                                    Buy Now - Ksh {item.price.toLocaleString()}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
