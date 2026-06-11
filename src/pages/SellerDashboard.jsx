@@ -123,6 +123,21 @@ export default function SellerDashboard() {
                 </div>
 
             </nav>
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                {/* dashboard header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <h1 className="text-2xl font-extrabold text-[#1a1a1a]">Welcome back, {SELLER.name.split(' ')[0]}</h1>
+                    <p className="text-gray-500 text-sm mt-1">Manage your listings and track your sales</p>
+                </div>
+                <button
+                onClick={() => setActiveTab("new")}
+                className = "flex items-center gap-2 px-5 py-3 rounded-xl bg-[#f5a623] text-[#1a1a1a] font-bold text-sm hover:bg-amber-500 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 self-start sm:self-auto"
+                >
+                     + Post New Listing
+                </button>
+
+            </div>
 
 
 
