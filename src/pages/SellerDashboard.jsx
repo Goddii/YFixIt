@@ -85,7 +85,50 @@ export default function SellerDashboard() {
     function markAsSold(id){
         setListings(listings.map((l) => l.id === id ? {...l,status:'sold'} : l));
     }
-    
+
+    function markAsActive(id){
+        setListings(listings.map((l) => l.id === id ? {...l,status:'active'} : l));
+    }
+
+    function deleteListing(id){
+        setListings(listings.filter((l) => l.id !== id));
+        setDeleteId(null);
+    }
+
+    return (
+        <div className='min-h-screen bg-[#f7f3ed]'>
+            {/* navbar */}
+            <nav className="bg-[#1a3d2b] sticky top-0 z-40 shadow-md">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+                    <Link to="/" className="flex items-center gap-2">
+                        <span className="text-[#f5a623] text-xl">⚙</span>
+                        <span className="font-extrabold text-lg text-white">YFixIt</span>
+                    </Link>
+                    <div className="flex items-center gap-3">
+                        <Link to="/browse" className="text-white/70 hover:text-white text-sm font-medium hidden sm:block">
+                        Browse
+                        </Link>
+                        {/* seller avatar */}
+                        <div className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 cursor-pointer hover:bg-white/20 transition-all">
+                            <div className="w-6 h-6 rounded-full bg-[#f5a623] flex items-center justify-center text-xs font-bold text-[#1a1a1a]">
+                                {SELLER.avatar}
+                            </div>
+                            <span className="text-white text-xs font-medium">{SELLER.name}</span>
+                        
+                        </div>
+                        <Link to='/' className="text-white/60 hover:text-white text-xs font-medium transition-colors">
+                        Logout
+                        </Link>
+                    </div>
+                </div>
+
+            </nav>
+
+
+
+        </div>
+    )
+
 
 
 
