@@ -42,4 +42,28 @@ export default function SellerDashboard() {
     const [formSuccess, setFormSuccess] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
+    // handle status change (active/sold)
+    const totalListings  = listings.length;
+    const activeListings = listings.filter((l) => l.status === "active").length;
+    const soldListings   = listings.filter((l) => l.status === "sold").length;
+    const totalViews     = listings.reduce((sum, l) => sum + l.views, 0);
+
+    //form handlers
+    function handleChange(e){
+        setForm({...form, [e.target.name]:e.target.value})
+    }
+
+    function handleSubmit(e){
+        // Handle form submission logic here
+        e.preventDefault();
+        setFormErrors('');
+        const {title, price, description} = form;
+        if(!title || !price || !description){
+            setFormErrors('Please fill in all required fields');
+            return;
+        }
+    }
+
+
+
 }
