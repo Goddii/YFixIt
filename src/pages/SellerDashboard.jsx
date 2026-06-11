@@ -62,6 +62,25 @@ export default function SellerDashboard() {
             setFormErrors('Please fill in all required fields');
             return;
         }
+
+        if (isNaN(price) || Number(price) <= 0){
+            setFormErrors('Price must be a positive number');
+            return;
+        }
+        const newListing = {
+            id: Date.now(),
+            ...form,
+            price: Number(form.price),
+            status: "active",
+            views: 0,
+            posted: "Just now",
+        };
+        setListings([newListing, ...listings]);
+        setForm(EMPTY_FORM);
+        setFormSuccess(true);
+        setActiveTab("listings");
+        setTimeout(() => setFormSuccess(false), 4000);
+        
     }
 
 
