@@ -32,3 +32,14 @@ const EMPTY_FORM = {
 };
 
 const IMAGE_OPTIONS = ["📱","💻","🔌","🎧","🖥️","🎮","📷","⌨️","🔊","🖱️","🔋","🖨️","📺","⌚","🕹️"];
+
+
+export default function SellerDashboard() {
+    const [listings, setListings] = useState(INITIAL_LISTINGS);
+    const [form, setForm] = useState(EMPTY_FORM);
+    const [activeTab, setActiveTab] = useState("listings");
+    const [formErrors, setFormErrors] = useState('');
+    const [formSuccess, setFormSuccess] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
+
+}
