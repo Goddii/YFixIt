@@ -4,6 +4,7 @@ import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import Browse from './pages/Browse.jsx';
 import ListingDetail from './pages/ListingDetail.jsx'
+import SellerDashboard from './pages/SellerDashboard.jsx';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Route path='/signup' element={<Signup/>} /> 
       <Route path='/browse' element = {<Browse/>} />
       <Route path='/listing/:id' element={<ListingDetail/>}/>
+      <Route path='/dashboard' element={<SellerDashboard/>}/>
     </Routes>
   )
 }
