@@ -82,6 +82,10 @@ export default function SellerDashboard() {
         setTimeout(() => setFormSuccess(false), 4000);
         
     }
+    function markAsSold(id){
+        setListings(listings.map((l) => l.id === id ? {...l,status:'sold'} : l));
+    }
+    
 
 
 
