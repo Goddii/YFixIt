@@ -7,9 +7,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+node_modules/
+dist/
+dist-ssr/
 *.local
 
 # Editor directories and files
@@ -22,3 +22,30 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+venv/*
+.venv/
+.env/
+.env.local
+.env.production
+
+#database files
+*.db
+*.sqlite
+
+#editor folders
+.vscode/
+.idea/
+.DS_Store
+
+#Logs
+*.log
+npm-debug.log*
+
+#vite
+*.local
+
+# other
+*.sln
+*.sw?
+*.ntvs*
+*.njsproj
