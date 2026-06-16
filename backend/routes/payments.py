@@ -14,11 +14,20 @@ payments_bp = Blueprint("payments", __name__)
 def get_mpesa_token():
     consumer_key = os.getenv("MPESA_CONSUMER_KEY")
     consumer_secret = os.getenv("MPESA_CONSUMER_SECRET")
+
+    if not consumer_key or not consumer_secret:
+        return None
+
     credentials = base64.b64encode(f"{consumer_key}:{consumer_secret}".encode()).decode()
-    response = requests.get(
-        "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials",
-        headers={"Authorization": f"Basic {credentials}"},
-    )
+    try:
+        response = requests.get(
+            "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials",
+            headers={"Authorization": f"Basic {credentials}"},
+            timeout=20,
+        )
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
 
     return response.json().get("access_token")
 
@@ -61,6 +70,22 @@ def stk_push():
     shortcode = os.getenv("MPESA_SHORTCODE", "174379")
     passkey = os.getenv("MPESA_PASSKEY")
     callback_url = os.getenv("MPESA_CALLBACK_URL")
+
+    missing_config = [
+        name for name, value in {
+            "MPESA_CONSUMER_KEY": os.getenv("MPESA_CONSUMER_KEY"),
+            "MPESA_CONSUMER_SECRET": os.getenv("MPESA_CONSUMER_SECRET"),
+            "MPESA_PASSKEY": passkey,
+            "MPESA_CALLBACK_URL": callback_url,
+        }.items()
+        if not value
+    ]
+    if missing_config:
+        return jsonify({
+            "error": "M-Pesa is not configured",
+            "missing": missing_config,
+        }), 500
+
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     password = base64.b64encode(f"{shortcode}{passkey}{timestamp}".encode()).decode()
     amount = int(listing.price)
@@ -85,17 +110,22 @@ def stk_push():
     }
 
 
-    mpesa_response = requests.post(
-        "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
-        json=stk_payload,
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-        
-        },
-    )        
-
-    mpesa_data = mpesa_response.json()
+    try:
+        mpesa_response = requests.post(
+            "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
+            json=stk_payload,
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+            
+            },
+            timeout=20,
+        )
+        mpesa_data = mpesa_response.json()
+    except requests.RequestException:
+        return jsonify({"error": "Could not reach M-Pesa. Please try again."}), 502
+    except ValueError:
+        return jsonify({"error": "M-Pesa returned an invalid response"}), 502
 
     # if safaricom accepted the request
     if mpesa_data.get("ResponseCode") == "0":

@@ -1,41 +1,95 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { api } from "../api"
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../api";
 
-// ── Mock seller data (replaced by real API on Day 16) ─────────────────────
+const CATEGORIES = ["Phones", "Laptops", "Tablets", "TVs", "Audio", "Appliances", "Other"];
+const CONDITIONS = ["Good", "Fair", "Broken"];
+const LOCATIONS = ["Nairobi", "Westlands", "Kilimani", "Thika", "Mombasa", "Kisumu", "Eldoret"];
+const IMAGE_OPTIONS = ["P", "L", "T", "TV", "A", "R", "C", "G"];
 
+const CONDITION_STYLES = {
+  Good: "bg-green-100 text-green-700",
+  Fair: "bg-yellow-100 text-yellow-700",
+  Broken: "bg-red-100 text-red-600",
+};
+
+const EMPTY_FORM = {
+  title: "",
+  category: CATEGORIES[0],
+  condition: CONDITIONS[0],
+  price: "",
+  location: LOCATIONS[0],
+  description: "",
+  image: IMAGE_OPTIONS[0],
+};
+
+function formatPostedDate(value) {
+  if (!value) return "recently";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "recently";
+
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
 
 export default function SellerDashboard() {
-  const [listings, setListings]     = useState(INITIAL_LISTINGS);
+  const navigate = useNavigate();
+  const [seller, setSeller]         = useState(null);
+  const [listings, setListings]     = useState([]);
   const [activeTab, setActiveTab]   = useState("listings"); // listings | new | stats
   const [form, setForm]             = useState(EMPTY_FORM);
   const [formError, setFormError]   = useState("");
   const [formSuccess, setFormSuccess] = useState(false);
   const [deleteId, setDeleteId]     = useState(null);
+  const [loading, setLoading]       = useState(true);
+  const [pageError, setPageError]   = useState("");
 
 
   useEffect(() => {
-    api.myListings().then(data => setListings(data.listings))
-  }, [])
+    let mounted = true;
 
-  const handlePost = async () => {
-    await api.createListing(newItem);
-    const data = await api.myListings();
-    setListings(data.listings)
-  }
+    async function loadDashboard() {
+      try {
+        const [profile, listingsData] = await Promise.all([
+          api.me(),
+          api.myListings(),
+        ]);
+
+        if (!mounted) return;
+        setSeller(profile.user);
+        setListings(listingsData.listings || []);
+      } catch (err) {
+        if (mounted) setPageError(err.message || "Could not load seller dashboard");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    loadDashboard();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // ── Stats ─────────────────────────────────────────────────────────────────
   const totalListings  = listings.length;
   const activeListings = listings.filter((l) => l.status === "active").length;
   const soldListings   = listings.filter((l) => l.status === "sold").length;
-  const totalViews     = listings.reduce((sum, l) => sum + l.views, 0);
+  const totalViews     = listings.reduce((sum, l) => sum + (l.views || 0), 0);
+  const sellerName     = seller?.name || "Seller";
+  const sellerAvatar   = sellerName.charAt(0).toUpperCase();
 
   // ── Form handlers ─────────────────────────────────────────────────────────
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setFormError("");
     const { title, price, description } = form;
@@ -48,33 +102,57 @@ export default function SellerDashboard() {
       return;
     }
 
-    const newListing = {
-      id: Date.now(),
-      ...form,
-      price: Number(form.price),
-      status: "active",
-      views: 0,
-      posted: "Just now",
-    };
+    try {
+      const data = await api.createListing({
+        title: form.title,
+        description: form.description,
+        price: Number(form.price),
+        category: form.category,
+        condition: form.condition,
+        location: form.location,
+      });
 
-    setListings([newListing, ...listings]);
-    setForm(EMPTY_FORM);
-    setFormSuccess(true);
-    setActiveTab("listings");
-    setTimeout(() => setFormSuccess(false), 4000);
+      setListings([data.listing, ...listings]);
+      setForm(EMPTY_FORM);
+      setFormSuccess(true);
+      setActiveTab("listings");
+      setTimeout(() => setFormSuccess(false), 4000);
+    } catch (err) {
+      setFormError(err.message || "Could not post listing.");
+    }
   }
 
-  function markAsSold(id) {
-    setListings(listings.map((l) => l.id === id ? { ...l, status: "sold" } : l));
+  async function markAsSold(id) {
+    try {
+      const data = await api.updateListing(id, { status: "sold" });
+      setListings(listings.map((l) => l.id === id ? data.listing : l));
+    } catch (err) {
+      setPageError(err.message || "Could not update listing.");
+    }
   }
 
-  function markAsActive(id) {
-    setListings(listings.map((l) => l.id === id ? { ...l, status: "active" } : l));
+  async function markAsActive(id) {
+    try {
+      const data = await api.updateListing(id, { status: "active" });
+      setListings(listings.map((l) => l.id === id ? data.listing : l));
+    } catch (err) {
+      setPageError(err.message || "Could not update listing.");
+    }
   }
 
-  function deleteListing(id) {
-    setListings(listings.filter((l) => l.id !== id));
-    setDeleteId(null);
+  async function deleteListing(id) {
+    try {
+      await api.deleteListing(id);
+      setListings(listings.filter((l) => l.id !== id));
+      setDeleteId(null);
+    } catch (err) {
+      setPageError(err.message || "Could not delete listing.");
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    navigate("/");
   }
 
   return (
@@ -94,13 +172,13 @@ export default function SellerDashboard() {
             {/* Seller avatar */}
             <div className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 cursor-pointer hover:bg-white/20 transition-all">
               <div className="w-6 h-6 rounded-full bg-[#f5a623] flex items-center justify-center text-xs font-bold text-[#1a1a1a]">
-                {SELLER.avatar}
+                {sellerAvatar}
               </div>
-              <span className="text-white text-xs font-medium hidden sm:block">{SELLER.name}</span>
+              <span className="text-white text-xs font-medium hidden sm:block">{sellerName}</span>
             </div>
-            <Link to="/" className="text-white/60 hover:text-white text-xs font-medium transition-colors">
+            <button onClick={handleLogout} className="text-white/60 hover:text-white text-xs font-medium transition-colors">
               Log out
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
@@ -111,7 +189,7 @@ export default function SellerDashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl font-extrabold text-[#1a1a1a]">
-              Welcome back, {SELLER.name.split(" ")[0]} 👋
+              Welcome back, {sellerName.split(" ")[0]} 👋
             </h1>
             <p className="text-gray-500 text-sm mt-1">Manage your listings and track your sales</p>
           </div>
@@ -120,8 +198,20 @@ export default function SellerDashboard() {
             className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[#f5a623] text-[#1a1a1a] font-bold text-sm hover:bg-amber-500 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 self-start sm:self-auto"
           >
             + Post New Item
-          </button>
+            </button>
         </div>
+
+        {pageError && (
+          <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-5 py-3 mb-6 text-sm font-medium">
+            {pageError}
+          </div>
+        )}
+
+        {loading && (
+          <div className="bg-white rounded-2xl shadow-sm p-12 text-center mb-8">
+            <p className="font-bold text-lg text-[#1a1a1a]">Loading dashboard...</p>
+          </div>
+        )}
 
         {/* ── STAT CARDS ──────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -194,15 +284,19 @@ export default function SellerDashboard() {
                   }`}
                 >
                   {/* Image */}
-                  <div className="bg-[#f7f3ed] rounded-xl w-full sm:w-24 h-24 flex items-center justify-center text-4xl shrink-0">
-                    {item.image}
+                  <div className="bg-[#f7f3ed] rounded-xl w-full sm:w-24 h-24 flex items-center justify-center text-sm font-bold text-gray-400 shrink-0 overflow-hidden">
+                    {item.image_url ? (
+                      <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                    ) : (
+                      "Item"
+                    )}
                   </div>
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-start gap-2 mb-1">
                       <h3 className="font-bold text-[#1a1a1a] text-base">{item.title}</h3>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${CONDITION_STYLES[item.condition]}`}>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${CONDITION_STYLES[item.condition] || "bg-gray-100 text-gray-500"}`}>
                         {item.condition}
                       </span>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -214,13 +308,13 @@ export default function SellerDashboard() {
                       </span>
                     </div>
                     <p className="text-xs text-gray-400 mb-2">
-                      📍 {item.location} · {item.category} · Posted {item.posted}
+                      📍 {item.location} · {item.category} · Posted {formatPostedDate(item.created_at)}
                     </p>
                     <div className="flex items-center gap-4">
                       <span className="text-[#f5a623] font-extrabold text-lg">
-                        Ksh {item.price.toLocaleString()}
+                        Ksh {Number(item.price || 0).toLocaleString()}
                       </span>
-                      <span className="text-xs text-gray-400">👁 {item.views} views</span>
+                      <span className="text-xs text-gray-400">👁 {item.views || 0} views</span>
                     </div>
                   </div>
 
