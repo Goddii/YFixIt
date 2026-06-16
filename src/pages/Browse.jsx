@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useActionData } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api } from "../api";
+
+const CONDITION_STYLES = {
+    Good: "bg-green-100 text-green-700",
+    Fair: "bg-yellow-100 text-yellow-700",
+    Broken: "bg-red-100 text-red-600",
+};
 
 
 
@@ -18,17 +24,23 @@ export default function Browse() {
 
     const [listings, setListings] = useState([])
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
 
     useEffect(() => {
         api.getListings().then(data => {
-            setListings(data.listings);
+            setListings(data.listings || []);
             setLoading(false)
-        }).catch(() => setLoading(false))
+        }).catch((err) => {
+            setError(err.message || "Could not load listings")
+            setLoading(false)
+        })
     }, [])
 
+    const categories = ['All', ...new Set(listings.map((item) => item.category).filter(Boolean))]
+    const conditions = ['All', ...new Set(listings.map((item) => item.condition).filter(Boolean))]
+    const locations = ['All', ...new Set(listings.map((item) => item.location).filter(Boolean))]
 
-
-    const filtered = LISTINGS.filter((item) => {
+    const filtered = listings.filter((item) => {
         const matchSearch = item.title.toLowerCase().includes(search.toLowerCase())
         const matchCategory = category === 'All' || item.category === category;
         const matchCondition = condition === 'All' || item.condition === condition;
@@ -40,7 +52,7 @@ export default function Browse() {
     .sort((a,b) => {
         if (sortBy === 'price-asc') return a.price - b.price;
         if (sortBy === 'price-desc') return b.price - a.price
-        return 0;
+        return new Date(b.created_at) - new Date(a.created_at);
     })
 
     function resetFilters() {
@@ -60,13 +72,13 @@ export default function Browse() {
 
 
     // shared filter panel (used in sidebar)
-    const FilterPanel = () => (
+    const renderFilterPanel = () => (
         <div className="flex flex-col gap-7">
             {/* category */}
             <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Category</p>
                 <div className="flex flex-col gap-1">
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                         <button
                         key={cat}
                         onClick={() => setCategory(cat)}
@@ -82,7 +94,7 @@ export default function Browse() {
             <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Condition</p>
                 <div className="flex flex-col gap-1">
-                    {CONDITIONS.map((cond) => (
+                    {conditions.map((cond) => (
                         <button
                         key={cond}
                         onClick={() => setCondition(cond)}
@@ -121,7 +133,7 @@ export default function Browse() {
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border-2 border-gray-200 focus:border-[#1a3d2b] focus:outline-none text-sm bg-white"
                 >
-                    {LOCATIONS.map((loc) => (
+                    {locations.map((loc) => (
                         <option key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</option>
                     ))}
 
@@ -233,14 +245,22 @@ export default function Browse() {
                     <aside className="hidden lg:block w-56 shrink-0">
                         <div className="bg-white rounded-2xl shadow-sm p-5 sticky top-20">
                             <p className="font-extrabold text-[#1a1a1a] mb-5">Filters</p>
-                            <FilterPanel />
+                            {renderFilterPanel()}
                         </div>
 
                     </aside>
 
                     {/* product grid */}
                     <main className="flex-1">
-                        {filtered.length === 0 ? (
+                        {loading ? (
+                            <div className="text-center py-24">
+                                <p className="font-bold text-lg text-[#1a1a1a]">Loading listings...</p>
+                            </div>
+                        ) : error ? (
+                            <div className="text-center py-24">
+                                <p className="font-bold text-lg text-red-600">{error}</p>
+                            </div>
+                        ) : filtered.length === 0 ? (
                             <div className="text-center py-24">
                                 <p className="text-5xl mb-4">🔍</p>
                                 <p className="font-bold text-lg text-[#1a1a1a]">No Listings found</p>
@@ -263,8 +283,12 @@ export default function Browse() {
                                     className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 overflow-hidden group"
                                     >
                                     {/* image-area */}
-                                    <div className="bg-[#f7f3ed] h-44 flex items-center justify-center text-6xl group:hover:bg-[#eee8df] transition-colors">
-                                        {item.image}
+                                    <div className="bg-[#f7f3ed] h-44 flex items-center justify-center text-4xl group:hover:bg-[#eee8df] transition-colors overflow-hidden">
+                                        {item.image_url ? (
+                                            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <span>Item</span>
+                                        )}
                                     </div>
                                     {/* details */}
                                     <div className="p-4">
@@ -281,11 +305,13 @@ export default function Browse() {
                                             <span className="text-[#f5a623] font-extrabold text-base">
                                                 Ksh {item.price.toLocaleString()}
                                             </span>
-                                            <span className="text-[10px] text-gray-400"> {item.posted}</span>
+                                            <span className="text-[10px] text-gray-400">
+                                                {new Date(item.created_at).toLocaleDateString()}
+                                            </span>
                                         </div>
 
                                         <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
-                                            <span className="text-xs text-gray-400">by {item.seller}</span>
+                                            <span className="text-xs text-gray-400">by {item.seller_name || "Seller"}</span>
                                             <span className="text-xs font-semibold text-[#1a3d2b] group-hoverr:text-[#f5a623] transition-colors">
                                                View →  
                                             </span>
@@ -318,7 +344,7 @@ export default function Browse() {
                           ✕  
                         </button>
                     </div>
-                    <FilterPanel />
+                    {renderFilterPanel()}
                     <button
                     onClick={() => setDrawerOpen(false)}
                     className="mt-6 w-full py-3 rounded-xl bg-[#1a3d2b] text-white font-bold text-sm"
