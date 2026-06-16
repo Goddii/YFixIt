@@ -1,0 +1,47 @@
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
+
+// helpers
+
+async function request(endpoint, options={}) {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`${BASE_URL}${endpoint}` , {
+      headers: {
+        "Content-Type" : "application/json",
+        ...(token && {Authorization: `Bearer ${token}`}),
+      },
+      ...options  
+    });
+
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || "Something went wrong");
+    return data;
+}
+
+export const api = {
+    register: (body) => request("/api/auth/register", {method: "POST", body: JSON.stringify(body)}),
+
+    login: (body) => request("/api/auth/login", {method: "POST", body: JSON.stringify(body)}),
+
+    me: () => request("/api/auth/me"),
+
+    // listings
+    getListings: (params = {}) => request("/api/listings/?" + new URLSearchParams(params)),
+
+    getListing: (id) => request(`/api/listings/${id}`),
+    myListings: () => request("/api/listings/seller/me"),
+    createListing: (body) => request("/api/listings/",{ method: "POST", body: JSON.stringify(body)}),
+    updateListing: (id, body) => request(`/api/listings/${id}`, {method: "PUT", body: JSON.stringify(body)}),
+    deleteListing:(id) => request(`/api/listings/${id}`, {method: "DELETE"}),
+
+
+    // PAYMENTS
+    stkPush: (body) => request("/api/payments/stk-push", {method: "POST", body: JSON.stringify(body)}),
+    paymentStatus: (id) => request(`/api/payments/status/${id}`),
+    myOrders: () => request("/api/payments/my-orders"),
+
+
+
+
+
+}

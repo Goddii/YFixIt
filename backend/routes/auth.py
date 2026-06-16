@@ -3,6 +3,7 @@ from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 from models import User
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 auth_bp = Blueprint("auth", __name__)
@@ -66,7 +67,7 @@ def login():
 
 
     if not email or not password:
-        return jsoify({"error": "Email and password are required"}), 400
+        return jsonify({"error": "Email and password are required"}), 400
 
     user = User.query.filter_by(email=email).first()
 
@@ -86,13 +87,13 @@ def login():
 
 # get /api/auth/me
 # return the logged in user's profile(used by react on page load)
-from flask_jwt extended import jwt_required, get_jwt_identity
+
 
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required()
 def me():
     identity = get_jwt_identity()
-    user = User.query.get(identity["id"])
+    user = db.session.get(User, identity["id"])
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify({"user":user.to_dict()}),200

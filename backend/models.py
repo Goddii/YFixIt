@@ -7,7 +7,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     phone = db.Column(db.String(20),  unique=True, nullable=False)
     password   = db.Column(db.String(255), nullable=False) # stored as bcrypt hash
     role       = db.Column(db.String(10),  nullable=False) # buyer or seller
@@ -28,7 +28,7 @@ class User(db.Model):
         }
 
 
-class Listings(db.Model):
+class Listing(db.Model):
     __tablename__ = "listings"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -45,7 +45,7 @@ class Listings(db.Model):
 
 
     # foreign key which seller posted this
-    seller_id = db.column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    seller_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     # relationships
     orders = db.relationship("Order", backref="listing", lazy=True)
@@ -65,7 +65,7 @@ class Listings(db.Model):
             "seller_id":   self.seller_id,
             "seller_name": self.seller.name if self.seller else None,
             "seller_phone":self.seller.phone if self.seller else None,
-            "created_at":  self.created_at.isoformat(),
+            "created_at":  self.created_at.isoformat()
         }
 
 
@@ -79,7 +79,7 @@ class Order(db.Model):
     mpesa_checkout_id   = db.Column(db.String(100), nullable=True)     # from Daraja STK push
     mpesa_receipt       = db.Column(db.String(100), nullable=True)     # from Daraja callback
     phone               = db.Column(db.String(20),  nullable=False)    # buyer phone for STK push
-    created_at          = db.Column(db.DateTime,    default=datetime.utcnow
+    created_at          = db.Column(db.DateTime,    default=datetime.utcnow),
 
     #foreign keys
     buyer_id   = db.Column(db.Integer, db.ForeignKey("users.id"),    nullable=False)

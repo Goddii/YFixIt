@@ -179,11 +179,11 @@ def payment_status(order_id):
 
 # get /api/payments/my-orders
 # returns all orders for the logged-in buyer
-@payments_bp_route("/my-orders", methods=["GET"])
+@payments_bp.route("/my-orders", methods=["GET"])
 @jwt_required()
 def my_orders():
     identity = get_jwt_identity()
-    orders = Orders.query.filter_by(buyer_id=identity["id"]).order_by(Order.created_at_desc()).all()
+    orders = Order.query.filter_by(buyer_id=identity["id"]).order_by(Order.created_at_desc()).all()
 
     return jsonify({"orders": [o.to_dict() for o in orders]}), 200                           
 

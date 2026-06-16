@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
+from flask_jwt_extended import JWTManager
 
 
 load_dotenv()
@@ -18,7 +19,7 @@ def create_app():
 
     # config
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY","dev-secret")
-    app.config["SQLALCHEMY_DATABASE_URL"] = os.getenv("DATABASE_URL","sqlite:///yfixit.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL","sqlite:///yfixit.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret")
 
@@ -35,9 +36,9 @@ def create_app():
     from routes.payments import payments_bp
 
 
-    app.register_blueprints(auth_bp, url_prefix="/api/auth")
-    app.register_blueprints(listings_bp, url_prefix="/api/listings")
-    app.register_blueprints(payments_bp, url_prefix="/api/payments")
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(listings_bp, url_prefix="/api/listings")
+    app.register_blueprint(payments_bp, url_prefix="/api/payments")
 
 
     @app.route("/api/health")
@@ -52,6 +53,6 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=8000)
 
 
