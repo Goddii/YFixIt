@@ -17,6 +17,7 @@ export default function App() {
       <Route path='/browse' element = {<Browse/>} />
       <Route path='/listing/:id' element={<ListingDetail/>}/>
       <Route path='/dashboard' element={<SellerDashboard/>}/>
+      <Route path='/seller/dashboard' element={<SellerDashboard/>}/>
       <Route path='/buyer/dashboard' element={<BuyerDashboard/>}/>
       <Route path='*' element={<NotFound/>} />
 

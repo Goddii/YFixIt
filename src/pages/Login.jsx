@@ -14,8 +14,8 @@ export default function Login() {
         e.preventDefault()
         setError('');
         try {
-            await login({email, password});
-            navigate("/buyer/dashboard")
+            const data = await login({email, password});
+            navigate(data.user.role === "seller" ? "/seller/dashboard" : "/buyer/dashboard")
         } catch (err) {
             setError(err.message || "Something went wrong");
         }

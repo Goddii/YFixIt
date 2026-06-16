@@ -4,6 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
 function getErrorMessage(data) {
     if (typeof data?.error === "string") return data.error;
     if (typeof data?.message === "string") return data.message;
+    if (typeof data?.msg === "string") return data.msg;
     return "Something went wrong";
 }
 
