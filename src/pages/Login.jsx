@@ -6,7 +6,7 @@ export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    const navigate = useNavigate
+    const navigate = useNavigate()
     const { login } = useAuth()
 
 
@@ -15,14 +15,14 @@ export default function Login() {
         setError({});
         try {
             await login({email, password});
-            navigate(role === "seller" ? "seller/dashboard" : "/buyer/dashboard")
+            navigate("/buyer/dashboard")
         } catch (err) {
             setErrors({general: err.message});
         }
     };
         
 
-    }
+    
 
     return (
         <div className="min-h-screen bg-[#f7f3ed] flex items-center justify-center px-4">

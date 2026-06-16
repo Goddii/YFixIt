@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useActionData } from "react-router-dom";
+import { api } from "../api";
 
 const [listings, setListings] = useState([])
 const [loading, setLoading] = useState(true)
