@@ -2,9 +2,17 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
 
 // helpers
 function getErrorMessage(data) {
+    if (typeof data?.details?.errorMessage === "string") {
+        return data?.error ? `${data.error}: ${data.details.errorMessage}` : data.details.errorMessage;
+    }
+    if (typeof data?.details?.ResponseDescription === "string") {
+        return data?.error ? `${data.error}: ${data.details.ResponseDescription}` : data.details.ResponseDescription;
+    }
+    if (typeof data?.hint === "string" && typeof data?.error === "string") return `${data.error}. ${data.hint}`;
     if (typeof data?.error === "string") return data.error;
     if (typeof data?.message === "string") return data.message;
     if (typeof data?.msg === "string") return data.msg;
+    if (typeof data?.hint === "string") return data.hint;
     return "Something went wrong";
 }
 

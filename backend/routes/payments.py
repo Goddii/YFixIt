@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 import base64
 import os
+import re
 from models import db, Order, Listing
 
 
@@ -34,12 +35,20 @@ def get_mpesa_token():
 
 # helper  : format phone to 2547XXXXXXXX
 def format_phone(phone):
-    phone = phone.strip().replace(" ", "").replace("-", "")
+    phone = re.sub(r"\D", "", str(phone))
+
+    if phone.startswith("254"):
+        return phone
     if phone.startswith("0"):
         return "254" + phone[1:]
-    if phone.startswith("+"):
-        return phone[1:]
+    if len(phone) == 9 and phone.startswith(("7", "1")):
+        return "254" + phone
+
     return phone
+
+
+def is_valid_mpesa_phone(phone):
+    return re.fullmatch(r"254[17]\d{8}", phone) is not None
 
 
 # post /api/payments/stk-push
@@ -90,6 +99,12 @@ def stk_push():
     password = base64.b64encode(f"{shortcode}{passkey}{timestamp}".encode()).decode()
     amount = int(listing.price)
     phone = format_phone(phone)
+
+    if not is_valid_mpesa_phone(phone):
+        return jsonify({
+            "error": "Enter a valid Safaricom M-Pesa phone number",
+            "hint": "Use 07XXXXXXXX, 01XXXXXXXX, 7XXXXXXXX, or 2547XXXXXXXX.",
+        }), 400
 
     token = get_mpesa_token()
     if not token:

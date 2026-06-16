@@ -36,6 +36,20 @@ function sellerPhoneLink(phone) {
   return normalized;
 }
 
+function normalizeMpesaPhone(phone) {
+  const digits = phone.replace(/\D/g, "");
+
+  if (digits.startsWith("254")) return digits;
+  if (digits.startsWith("0")) return `254${digits.slice(1)}`;
+  if (/^[17]\d{8}$/.test(digits)) return `254${digits}`;
+
+  return digits;
+}
+
+function isValidMpesaPhone(phone) {
+  return /^254[17]\d{8}$/.test(phone);
+}
+
 function ListingImage({ item, size = "large" }) {
   const sizeClass = size === "thumb" ? "h-16 text-xs" : "h-72 sm:h-96 text-sm";
 
@@ -134,8 +148,15 @@ export default function ListingDetail() {
       return;
     }
 
-    if (!checkoutPhone.trim()) {
+    const phone = normalizeMpesaPhone(checkoutPhone);
+
+    if (!phone) {
       setPaymentError("Enter the M-Pesa phone number to receive the STK push.");
+      return;
+    }
+
+    if (!isValidMpesaPhone(phone)) {
+      setPaymentError("Enter a valid Safaricom number, for example 07XXXXXXXX or 2547XXXXXXXX.");
       return;
     }
 
@@ -143,7 +164,7 @@ export default function ListingDetail() {
       setPaymentLoading(true);
       const data = await api.stkPush({
         listing_id: listing.id,
-        phone: checkoutPhone,
+        phone,
       });
 
       setOrderId(data.order_id);
