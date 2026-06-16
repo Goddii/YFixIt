@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from app import db
-from models import Listing, User
+from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
+from models import db, Listing
 
 listings_bp = Blueprint("listings", __name__)
 
@@ -70,9 +69,10 @@ def get_listing(listing_id):
 @listings_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_listing():
-    identity = get_jwt_identity()
+    user_id = int(get_jwt_identity())
+    role = get_jwt().get("role")
 
-    if identity["role"] != "seller":
+    if role != "seller":
         return jsonify({"error": "Only sellers can post listings"}), 403
 
     data = request.get_json()
@@ -90,7 +90,7 @@ def create_listing():
         condition   = data["condition"],
         location    = data["location"],
         image_url   = data.get("image_url"),   # Cloudinary URL — optional for now
-        seller_id   = identity["id"],
+        seller_id   = user_id,
     )
 
     db.session.add(listing)
@@ -107,10 +107,10 @@ def create_listing():
 @listings_bp.route("/<int:listing_id>", methods=["PUT"])
 @jwt_required()
 def update_listing(listing_id):
-    identity = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     listing  = Listing.query.get_or_404(listing_id)
 
-    if listing.seller_id != identity["id"]:
+    if listing.seller_id != user_id:
         return jsonify({"error": "You can only edit your own listings"}), 403
 
     data = request.get_json()
@@ -137,10 +137,10 @@ def update_listing(listing_id):
 @listings_bp.route("/<int:listing_id>", methods=["DELETE"])
 @jwt_required()
 def delete_listing(listing_id):
-    identity = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     listing  = Listing.query.get_or_404(listing_id)
 
-    if listing.seller_id != identity["id"]:
+    if listing.seller_id != user_id:
         return jsonify({"error": "You can only delete your own listings"}), 403
 
     db.session.delete(listing)
@@ -154,11 +154,12 @@ def delete_listing(listing_id):
 @listings_bp.route("/seller/me", methods=["GET"])
 @jwt_required()
 def my_listings():
-    identity = get_jwt_identity()
+    user_id = int(get_jwt_identity())
+    role = get_jwt().get("role")
 
-    if identity["role"] != "seller":
+    if role != "seller":
         return jsonify({"error": "Only sellers can access this"}), 403
 
-    listings = Listing.query.filter_by(seller_id=identity["id"]).order_by(Listing.created_at.desc()).all()
+    listings = Listing.query.filter_by(seller_id=user_id).order_by(Listing.created_at.desc()).all()
 
     return jsonify({"listings": [l.to_dict() for l in listings]}), 200

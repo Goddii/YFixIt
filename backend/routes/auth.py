@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
-from models import User
+from models import db, User
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
@@ -46,10 +45,7 @@ def register():
     db.session.commit()
 
     # issue jwt immediately so user is logged in after signup
-    token = create_access_token(identity={
-        "id" : user.id,
-        "role" : user.role,
-    })
+    token = create_access_token(identity=str(user.id), additional_claims={"role": user.role})
 
     return jsonify({
         "message" : "Account created successfully",
@@ -74,10 +70,7 @@ def login():
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error" : "Invalid email or password"}), 401
 
-    token = create_access_token(identity={
-        "id": user.id,
-        "role" : user.role,
-    })
+    token = create_access_token(identity=str(user.id), additional_claims={"role": user.role})
 
     return jsonify({
         "message" : "Login successful",
@@ -92,13 +85,11 @@ def login():
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required()
 def me():
-    identity = get_jwt_identity()
-    user = db.session.get(User, identity["id"])
+    user_id = int(get_jwt_identity())
+    user = db.session.get(User, user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify({"user":user.to_dict()}),200
-
-
 
 
 

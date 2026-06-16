@@ -1,16 +1,15 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from flask_jwt_extended import JWTManager
 
+from models import db
+
 
 load_dotenv()
 
 # Extensions(created here initialised in create app)
-db = SQLAlchemy()
 jwt = JWTManager()
 
 
@@ -28,7 +27,7 @@ def create_app():
     jwt.init_app(app)
 
     #allow request from the react frontend
-    CORS(app, resources={r"/api/*":{"origins":os.getenv("FRONTEND_URL", "http://localhost:5173")}})
+    CORS(app, resources={r"/api/*": {"origins": os.getenv("FRONTEND_URL", "http://localhost:5173")}})
 
     #register route blueprints
     from routes.auth import auth_bp
@@ -54,5 +53,4 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True, port=8000)
-
 
