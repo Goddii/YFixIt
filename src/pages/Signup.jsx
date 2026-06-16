@@ -13,6 +13,7 @@ export default function Signup() {
     const [form, setForm] = useState({
         name: '',
         email: '',
+        phone: '',
         password: '',
         confirmPassword: '',
     });
@@ -28,7 +29,7 @@ export default function Signup() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            await register ({ name, email, phone, password, role})
+            await register ({ ...form, role})
             navigate(role === "seller" ? "/seller/dashboard": "/buyer/dashboard")
         } catch (err) {
             setError({ general: err.message})
@@ -57,9 +58,9 @@ export default function Signup() {
                             {value: 'seller', icon: '📦', label: 'I want to sell'},
                         ].map(({value,icon,label}) => (
                             <button key={value}
-                            type="bottom"
+                            type="button"
                             onClick={() => setRole(value)}
-                            className={"flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm  transition-all ${role === value ? 'bg-[#1a3d2b] text-black shadow-md : 'text-gray-400 hover:text-[#1a1a1a]'}"}
+                            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all ${role === value ? 'bg-[#1a3d2b] text-white shadow-md' : 'text-gray-400 hover:text-[#1a1a1a]'}`}
 
                             >
                               <span> {icon}</span>
@@ -68,7 +69,7 @@ export default function Signup() {
                         ))}
                     </div>
                     {/* role context hint */}
-                    <div className={"rounded-xl px-4 py-3 text-xs font-medium mb-6 ${role === 'seller' ? 'bg-[#1a3d2b]/10 text-[#1a3d2b] : 'bg-[#f5a623]/15 text-[#b57d10]'}"}>
+                    <div className={`rounded-xl px-4 py-3 text-xs           font-medium mb-6 ${role === 'seller' ? 'bg-[#1a3d2b]/10 text-[#1a3d2b]' : 'bg-[#f5a623]/15 text-[#b57d10]'}`}>
                         {role === "seller"
                         ? "📦 As a seller you can post items,set prices, and receive payments via mpesa or bank"
                         : "🛍️ As a buyer you can browse listings, message sellers, and pay securely via mpesa or bank"

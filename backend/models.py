@@ -79,7 +79,7 @@ class Order(db.Model):
     mpesa_checkout_id   = db.Column(db.String(100), nullable=True)     # from Daraja STK push
     mpesa_receipt       = db.Column(db.String(100), nullable=True)     # from Daraja callback
     phone               = db.Column(db.String(20),  nullable=False)    # buyer phone for STK push
-    created_at          = db.Column(db.DateTime,    default=datetime.utcnow),
+    created_at          = db.Column(db.DateTime,    default=datetime.utcnow)
 
     #foreign keys
     buyer_id   = db.Column(db.Integer, db.ForeignKey("users.id"),    nullable=False)

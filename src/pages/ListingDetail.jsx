@@ -1,9 +1,8 @@
 import {useParams, Link} from 'react-router-dom'
 import { api } from "../api"
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-// mock data
-const  [ ]
+
 
 
 export default function ListingDetail() {
@@ -18,7 +17,7 @@ export default function ListingDetail() {
     
 
     // 404 state
-    if (!item) {
+    if (!listing) {
         return (
             <div className='min-h-screen bg-[#f7f3ed] flex flex-col items-center justify-center gap-4'>
                 <p className='text-6xl'>😕</p>

@@ -3,15 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "../api"
 
 // ── Mock seller data (replaced by real API on Day 16) ─────────────────────
-useEffect(() => {
-  api.myListings().then(data => setListings(data.listings))
-}, [])
 
-const handlePost = async () => {
-  await api.createListing(newItem);
-  const data = await api.myListings();
-  setListings(data.listings)
-}
 
 export default function SellerDashboard() {
   const [listings, setListings]     = useState(INITIAL_LISTINGS);
@@ -20,6 +12,17 @@ export default function SellerDashboard() {
   const [formError, setFormError]   = useState("");
   const [formSuccess, setFormSuccess] = useState(false);
   const [deleteId, setDeleteId]     = useState(null);
+
+
+  useEffect(() => {
+    api.myListings().then(data => setListings(data.listings))
+  }, [])
+
+  const handlePost = async () => {
+    await api.createListing(newItem);
+    const data = await api.myListings();
+    setListings(data.listings)
+  }
 
   // ── Stats ─────────────────────────────────────────────────────────────────
   const totalListings  = listings.length;

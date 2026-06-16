@@ -2,15 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useActionData } from "react-router-dom";
 import { api } from "../api";
 
-const [listings, setListings] = useState([])
-const [loading, setLoading] = useState(true)
 
-useEffect(() => {
-    api.getListings().then(data => {
-        setListings(data.listings);
-        setLoading(false)
-    }).catch(() => setLoading(false))
-}, [])
+
 
 
 
@@ -22,6 +15,17 @@ export default function Browse() {
     const [maxPrice, setMaxPrice] = useState(50000)
     const [drawerOpen, setDrawerOpen] = useState(false)
     const [sortBy, setSortBy] = useState('newest')
+
+    const [listings, setListings] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        api.getListings().then(data => {
+            setListings(data.listings);
+            setLoading(false)
+        }).catch(() => setLoading(false))
+    }, [])
+
 
 
     const filtered = LISTINGS.filter((item) => {
