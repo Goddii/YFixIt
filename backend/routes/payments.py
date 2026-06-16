@@ -17,7 +17,7 @@ def get_mpesa_token():
     consumer_secret = os.getenv("MPESA_CONSUMER_SECRET")
 
     if not consumer_key or not consumer_secret:
-        return None
+        return None, {"error": "MPESA_CONSUMER_KEY and MPESA_CONSUMER_SECRET are required"}
 
     credentials = base64.b64encode(f"{consumer_key}:{consumer_secret}".encode()).decode()
     try:
@@ -26,11 +26,18 @@ def get_mpesa_token():
             headers={"Authorization": f"Basic {credentials}"},
             timeout=20,
         )
-        response.raise_for_status()
     except requests.RequestException:
-        return None
+        return None, {"error": "Could not reach M-Pesa token endpoint"}
 
-    return response.json().get("access_token")
+    try:
+        data = response.json()
+    except ValueError:
+        return None, {"error": "M-Pesa token endpoint returned an invalid response"}
+
+    if not response.ok:
+        return None, data
+
+    return data.get("access_token"), data
 
 
 # helper  : format phone to 2547XXXXXXXX
@@ -106,9 +113,12 @@ def stk_push():
             "hint": "Use 07XXXXXXXX, 01XXXXXXXX, 7XXXXXXXX, or 2547XXXXXXXX.",
         }), 400
 
-    token = get_mpesa_token()
+    token, token_data = get_mpesa_token()
     if not token:
-        return jsonify({"error": "Failed to get M-Pesa access token"}), 400
+        return jsonify({
+            "error": "Failed to get M-Pesa access token",
+            "details": token_data,
+        }), 400
 
     stk_payload = {
         "BusinessShortCode": shortcode,
