@@ -10,22 +10,18 @@ export default function Login() {
     const { login } = useAuth()
 
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        setError('')
-
-        // Basic Validation
-        if (!email || !password) {
-            setError('Please fill in all fields')
-            return;
-
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError({});
+        try {
+            await login({email, password});
+            navigate(role === "seller" ? "seller/dashboard" : "/buyer/dashboard")
+        } catch (err) {
+            setErrors({general: err.message});
         }
+    };
+        
 
-        // TODO (Replace with real flask api call)
-        // now simulating login to redirect home
-        console.log('Login attempt: ', {email,password});
-        alert('Login comming soon after backend connect');
-        navigate('/')
     }
 
     return (
