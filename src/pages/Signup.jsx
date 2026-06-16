@@ -28,11 +28,16 @@ export default function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setError('')
+        if (form.password !== form.confirmPassword) {
+            setError("Passwords do not match")
+            return
+        }
         try {
             await register ({ ...form, role})
             navigate(role === "seller" ? "/seller/dashboard": "/buyer/dashboard")
         } catch (err) {
-            setError({ general: err.message})
+            setError(err.message || "Something went wrong")
         }
     };
 

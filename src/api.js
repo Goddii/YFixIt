@@ -1,6 +1,11 @@
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
 
 // helpers
+function getErrorMessage(data) {
+    if (typeof data?.error === "string") return data.error;
+    if (typeof data?.message === "string") return data.message;
+    return "Something went wrong";
+}
 
 async function request(endpoint, options={}) {
     const token = localStorage.getItem("token");
@@ -14,7 +19,7 @@ async function request(endpoint, options={}) {
     });
 
     const data = await res.json();
-    if(!res.ok) throw new Error(data.error || "Something went wrong");
+    if(!res.ok) throw new Error(getErrorMessage(data));
     return data;
 }
 

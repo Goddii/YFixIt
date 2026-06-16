@@ -12,12 +12,12 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setError({});
+        setError('');
         try {
             await login({email, password});
             navigate("/buyer/dashboard")
         } catch (err) {
-            setErrors({general: err.message});
+            setError(err.message || "Something went wrong");
         }
     };
         
@@ -110,4 +110,3 @@ export default function Login() {
         </div>
     )
 }
-
