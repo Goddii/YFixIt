@@ -28,6 +28,7 @@ venv/*
 .env.local
 .env.production
 
+
 #database files
 *.db
 *.sqlite
@@ -51,4 +52,5 @@ npm-debug.log*
 *.njsproj
 
 #documentation
-.BACKED_GUIDE.md/
+.BACKED_GUIDE.md
+src/.env
