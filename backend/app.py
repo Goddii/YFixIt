@@ -20,7 +20,19 @@ def create_app():
 
     # config
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY","dev-secret")
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL","sqlite:///yfixit.db")
+
+
+    #render postgreSql connection string starts with postgres://
+
+
+    database_url = os.getenv("DATABASE_URL","sqlite:///yfixit.db")
+
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url    
+
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret")
 
@@ -28,8 +40,18 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
 
-    #allow request from the react frontend
-    CORS(app, resources={r"/api/*": {"origins": os.getenv("FRONTEND_URL", "http://localhost:5173")}})
+    # configure cloudinary(used by routes/uploads.py)
+    cloudinary.config(
+        cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
+        api_key = os.getenv("CLOUDINARY_API_KEY"),
+        api_secret = os.getenv("CLOUDINARY_API_SECRET"),
+        secure=True,
+    )
+
+    #allow request from the react frontend supports comma separated list
+    frontend_origins = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    allowed_origins = [origin.strip() for origin in frontend_origins.split(",")]
+    CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
     #register route blueprints
     from routes.auth import auth_bp
