@@ -48,6 +48,13 @@ export const api = {
     updateListing: (id, body) => request(`/api/listings/${id}`, {method: "PUT", body: JSON.stringify(body)}),
     deleteListing:(id) => request(`/api/listings/${id}`, {method: "DELETE"}),
 
+    //uploads
+    uploadImage: (file) => {
+        const formData = new FormData()
+        formData.append("image", file)
+        return uploadRequest("/api/uploads/image", formData);
+    },
+
 
     // PAYMENTS
     stkPush: (body) => request("/api/payments/stk-push", {method: "POST", body: JSON.stringify(body)}),

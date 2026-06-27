@@ -5,7 +5,7 @@ import { api } from "../api";
 const CATEGORIES = ["Phones", "Laptops", "Tablets", "TVs", "Audio", "Appliances", "Other"];
 const CONDITIONS = ["Good", "Fair", "Broken"];
 const LOCATIONS = ["Nairobi", "Westlands", "Kilimani", "Thika", "Mombasa", "Kisumu", "Eldoret"];
-const IMAGE_OPTIONS = ["P", "L", "T", "TV", "A", "R", "C", "G"];
+const MAX_IMAGE_SIZE_MB = 5
 
 const CONDITION_STYLES = {
   Good: "bg-green-100 text-green-700",
@@ -20,7 +20,6 @@ const EMPTY_FORM = {
   price: "",
   location: LOCATIONS[0],
   description: "",
-  image: IMAGE_OPTIONS[0],
 };
 
 function formatPostedDate(value) {
@@ -47,6 +46,7 @@ export default function SellerDashboard() {
   const [deleteId, setDeleteId]     = useState(null);
   const [loading, setLoading]       = useState(true);
   const [pageError, setPageError]   = useState("");
+  const [imagePreview, setImagePreview] = useState(null)
 
 
   useEffect(() => {
@@ -88,6 +88,34 @@ export default function SellerDashboard() {
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
+
+  function handleImageChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setFormError("")
+
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"]
+    if (!allowedTypes.includes(file.type)) {
+      setFormError('Please choose a PNG, JPG or WEBP image')
+      return
+    }
+    if(file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024){
+      setFormError(`Image must be smaller than ${MAX_IMAGE_SIZE_MB}MB`);
+      return
+    }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file))
+  }
+
+  function removeImage():
+    setImageFile(null)
+    if (imagePreview) URL.revokeObjectURL(imagePreview)
+      setImagePreview(null)
+
+
+
+
 
   async function handleSubmit(e) {
     e.preventDefault();

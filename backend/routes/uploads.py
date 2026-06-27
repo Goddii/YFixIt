@@ -4,7 +4,7 @@ import cloudinary
 import cloudinary.uploader
 
 
-uploads_bp = Blueprint(__name__)
+uploads_bp = Blueprint('uploads',__name__)
 
 # allowed image types
 ALLOWED_EXTENSIONS = {"png","jpeg", "webp"}
@@ -49,4 +49,4 @@ def upload_image():
     return jsonify({
         "message": "image uploaded successfully",
         "image_url": result.get("secure_url")
-    })                         
+    }), 201                         

@@ -3,6 +3,8 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from flask_jwt_extended import JWTManager
+import cloudinary
+
 
 from models import db
 
@@ -33,11 +35,13 @@ def create_app():
     from routes.auth import auth_bp
     from routes.listings import listings_bp
     from routes.payments import payments_bp
+    from routes.uploads  import uploads_bp
 
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(listings_bp, url_prefix="/api/listings")
     app.register_blueprint(payments_bp, url_prefix="/api/payments")
+    app.register_blueprint(uploads_bp, url_prefix="/api/uploads")
 
 
     @app.route("/api/health")
