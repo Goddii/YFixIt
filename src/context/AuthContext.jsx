@@ -1,9 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../api";
 import { AuthContext } from "./AuthContextValue";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+
+
+  // on first mount checks if a token exist in localstorage
+  useEffect(() => {
+    let mounted = true
+
+    async function restoreSession() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        if (mounted) setLoading(false)
+          return;
+      }
+
+      try {
+        const data = await api.me()
+        if (mounted) setUser(data.user);
+      } catch (err) {
+        //token invalid or expired
+        localStorage.removeItem("token")
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    restoreSession()
+
+    return () => {
+      mounted = false;
+    };
+  }, [] 
+  )
 
   async function login(credentials) {
     const data = await api.login(credentials);
