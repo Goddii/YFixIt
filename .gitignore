@@ -49,3 +49,6 @@ npm-debug.log*
 *.sw?
 *.ntvs*
 *.njsproj
+
+#documentation
+.BACKED_GUIDE.md/

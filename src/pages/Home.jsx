@@ -17,13 +17,13 @@ function Home() {
     <div className='font-sans bg-[#f7f3ed] text-[#1a1a1a] min-h-screen'>
       
       {/* Navbar */}
-      <nav className={'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-[#1a3d2b] shadow-lg" : "bg-transparent"}'}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-[#1a3d2b] shadow-lg" : "bg-transparent"}`}>
         <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex items-center justify-between h-16'>
             {/* logo */}
             <a href='#' className='flex items-center gap-2'>
               <span className='text-[#f5a623] text-2xl'>⚙</span>
-              <span className={'font-extrabold text-xl tracking-tight transition-colors ${ scrolled ? "text-white" : "text-[#1a3d2b]"}'}>
+              <span className={`font-extrabold text-xl tracking-tight transition-colors ${ scrolled ? "text-white" : "text-[#1a3d2b]"}`}>
                 YFixIt
               </span>
             </a>
@@ -59,7 +59,7 @@ function Home() {
 
             {/* Mobile hamburger */}
             <button className='md:hidden p-2' onClick={() => setMenuOpen(!menuOpen)} aria-label='Toggle menu'>
-                <div className={'w-6 h-0.5 transition-all ${scrolled ? "bg-white" : "bg-[#1a3d2b]"}'}></div>
+                <div className={`w-6 h-0.5 transition-all ${scrolled ? "bg-white" : "bg-[#1a3d2b]"}`}></div>
             </button>
 
           </div>
@@ -93,11 +93,7 @@ function Home() {
 
       {/* Hero */}
       <section className='relative min-h-screen flex items-center overflow-hidden'>
-        <div className='absolute inset-0 -z-10'>
-          <div className='absolute top-0 right-0 w-[55%] h-full bg-[#1a3d2b] clip-hero'/>
-          <div className='absolute bottom-24 right-[30%] w-40 h-40 rounded-full bg-[#f5a623] opacity-20 blur-2xl'/>
-          <div className='absolute top-32 left-[10%] w-24 h-24 rounded-full bg-[#1a3d2b] opacity-10 blur-2xl' />
-        </div>
+
         <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-24 pb-20'>
           <div className='grid lg:grid-cols-2 gap-12 items-center'>
             {/* left copy */}

@@ -63,6 +63,8 @@ YFixIt/
 └── README.md
 ```
 
+For a deeper mentor-style explanation of the backend setup, route structure, data flow, and production-readiness work, see [BACKEND_GUIDE.md](./BACKEND_GUIDE.md).
+
 ## Prerequisites
 
 Install these before running the app:
