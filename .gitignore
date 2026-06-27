@@ -27,6 +27,7 @@ venv/*
 .env/
 .env.local
 .env.production
+.env
 
 
 #database files
