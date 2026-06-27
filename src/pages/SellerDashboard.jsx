@@ -47,6 +47,7 @@ export default function SellerDashboard() {
   const [loading, setLoading]       = useState(true);
   const [pageError, setPageError]   = useState("");
   const [imagePreview, setImagePreview] = useState(null)
+  const [imageFile, setImageFile] = useState(null)
 
 
   useEffect(() => {
@@ -108,10 +109,11 @@ export default function SellerDashboard() {
     setImagePreview(URL.createObjectURL(file))
   }
 
-  function removeImage():
+  function removeImage() {
     setImageFile(null)
     if (imagePreview) URL.revokeObjectURL(imagePreview)
       setImagePreview(null)
+  }
 
 
 
@@ -483,28 +485,6 @@ export default function SellerDashboard() {
                 />
               </div>
 
-              {/* Emoji image picker */}
-              <div>
-                <label className="block text-sm font-semibold text-[#1a1a1a] mb-1.5">
-                  Item Icon <span className="text-gray-400 font-normal">(photo upload coming soon)</span>
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {IMAGE_OPTIONS.map((emoji) => (
-                    <button
-                      key={emoji}
-                      type="button"
-                      onClick={() => setForm({ ...form, image: emoji })}
-                      className={`w-10 h-10 rounded-xl text-xl transition-all ${
-                        form.image === emoji
-                          ? "bg-[#1a3d2b] ring-2 ring-[#1a3d2b] ring-offset-1"
-                          : "bg-[#f7f3ed] hover:bg-[#e8f0eb]"
-                      }`}
-                    >
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
-              </div>
 
               {/* Actions */}
               <div className="flex gap-3 pt-2">
