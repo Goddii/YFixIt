@@ -7,7 +7,7 @@ import cloudinary.uploader
 uploads_bp = Blueprint('uploads',__name__)
 
 # allowed image types
-ALLOWED_EXTENSIONS = {"png","jpeg", "webp"}
+ALLOWED_EXTENSIONS = {"png","jpeg","jpg", "webp"}
 
 def allowed_file(filename):
     return (
@@ -19,6 +19,7 @@ def allowed_file(filename):
 #PROTECTED -SELLERS ONLY
 #FILE FIELD Uploads to cloudinary and returns the resulting secure url
 @uploads_bp.route("/image", methods=["POST"])
+@jwt_required()
 def upload_image():
     role = get_jwt().get("role")
     if role != "seller":
@@ -32,7 +33,7 @@ def upload_image():
     if file.filename == "":
         return jsonify({"error":"No image file selected"}), 400
 
-    if not_allowed_file(file.filename):
+    if  not allowed_file(file.filename):
         return jsonify({
             "error":f"Unsupported file type.Allowed: {','.join(sorted(ALLOWED_EXTENSIONS))}"
         }), 400

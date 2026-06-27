@@ -16,6 +16,22 @@ function getErrorMessage(data) {
     return "Something went wrong";
 }
 
+async function uploadRequest(endpoint, formData) {
+    const token = localStorage.getItem("token")
+
+    const res = await fetch(`${BASE_URL}${endpoint}`, {
+       method: "POST",
+       headers: {
+        ...(token && {Authorization: `Bearer ${token}`}),
+       },
+       body: formData, 
+    });
+
+    const data = await res.json()
+    if (!res.ok) throw new Error(getErrorMessage(data))
+    return data    
+}
+
 async function request(endpoint, options={}) {
     const token = localStorage.getItem("token");
 

@@ -5,7 +5,7 @@ import { api } from "../api";
 const CATEGORIES = ["Phones", "Laptops", "Tablets", "TVs", "Audio", "Appliances", "Other"];
 const CONDITIONS = ["Good", "Fair", "Broken"];
 const LOCATIONS = ["Nairobi", "Westlands", "Kilimani", "Thika", "Mombasa", "Kisumu", "Eldoret"];
-const MAX_IMAGE_SIZE_MB = 5
+const MAX_IMAGE_SIZE_MB = 5;
 
 const CONDITION_STYLES = {
   Good: "bg-green-100 text-green-700",
@@ -41,13 +41,14 @@ export default function SellerDashboard() {
   const [listings, setListings]     = useState([]);
   const [activeTab, setActiveTab]   = useState("listings"); // listings | new | stats
   const [form, setForm]             = useState(EMPTY_FORM);
+  const [imageFile, setImageFile]   = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploading, setUploading]   = useState(false);
   const [formError, setFormError]   = useState("");
   const [formSuccess, setFormSuccess] = useState(false);
   const [deleteId, setDeleteId]     = useState(null);
   const [loading, setLoading]       = useState(true);
   const [pageError, setPageError]   = useState("");
-  const [imagePreview, setImagePreview] = useState(null)
-  const [imageFile, setImageFile] = useState(null)
 
 
   useEffect(() => {
@@ -91,33 +92,30 @@ export default function SellerDashboard() {
   }
 
   function handleImageChange(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    setFormError("")
+    setFormError("");
 
-    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"]
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-      setFormError('Please choose a PNG, JPG or WEBP image')
-      return
+      setFormError("Please choose a PNG, JPG, or WEBP image.");
+      return;
     }
-    if(file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024){
-      setFormError(`Image must be smaller than ${MAX_IMAGE_SIZE_MB}MB`);
-      return
+    if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+      setFormError(`Image must be smaller than ${MAX_IMAGE_SIZE_MB}MB.`);
+      return;
     }
+
     setImageFile(file);
-    setImagePreview(URL.createObjectURL(file))
+    setImagePreview(URL.createObjectURL(file));
   }
 
   function removeImage() {
-    setImageFile(null)
-    if (imagePreview) URL.revokeObjectURL(imagePreview)
-      setImagePreview(null)
+    setImageFile(null);
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+    setImagePreview(null);
   }
-
-
-
-
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -133,6 +131,21 @@ export default function SellerDashboard() {
     }
 
     try {
+      let image_url = null;
+
+      if (imageFile) {
+        setUploading(true);
+        try {
+          const uploadResult = await api.uploadImage(imageFile);
+          image_url = uploadResult.image_url;
+        } catch (err) {
+          setFormError(err.message || "Could not upload image.");
+          return;
+        } finally {
+          setUploading(false);
+        }
+      }
+
       const data = await api.createListing({
         title: form.title,
         description: form.description,
@@ -140,10 +153,12 @@ export default function SellerDashboard() {
         category: form.category,
         condition: form.condition,
         location: form.location,
+        ...(image_url && { image_url }),
       });
 
       setListings([data.listing, ...listings]);
       setForm(EMPTY_FORM);
+      removeImage();
       setFormSuccess(true);
       setActiveTab("listings");
       setTimeout(() => setFormSuccess(false), 4000);
@@ -485,18 +500,54 @@ export default function SellerDashboard() {
                 />
               </div>
 
+              {/* Image upload */}
+              <div>
+                <label className="block text-sm font-semibold text-[#1a1a1a] mb-1.5">
+                  Item Photo <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+
+                {imagePreview ? (
+                  <div className="relative w-32 h-32">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-full h-full object-cover rounded-xl border-2 border-gray-200"
+                    />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center hover:bg-red-600 transition-all"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center w-32 h-32 rounded-xl border-2 border-dashed border-gray-300 cursor-pointer hover:border-[#1a3d2b] transition-colors text-gray-400 text-xs font-medium gap-1">
+                    <span className="text-2xl">📷</span>
+                    Add photo
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+                <p className="text-xs text-gray-400 mt-1.5">PNG, JPG, or WEBP. Max {MAX_IMAGE_SIZE_MB}MB.</p>
+              </div>
 
               {/* Actions */}
               <div className="flex gap-3 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 py-3.5 rounded-xl bg-[#f5a623] text-[#1a1a1a] font-bold text-sm hover:bg-amber-500 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                  disabled={uploading}
+                  className="flex-1 py-3.5 rounded-xl bg-[#f5a623] text-[#1a1a1a] font-bold text-sm hover:bg-amber-500 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:-translate-y-0"
                 >
-                  Post Listing →
+                  {uploading ? "Uploading photo…" : "Post Listing →"}
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setForm(EMPTY_FORM); setActiveTab("listings"); }}
+                  onClick={() => { setForm(EMPTY_FORM); removeImage(); setActiveTab("listings"); }}
                   className="px-5 py-3.5 rounded-xl border-2 border-gray-200 text-gray-500 font-semibold text-sm hover:border-gray-300 transition-all"
                 >
                   Cancel
