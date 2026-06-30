@@ -22,8 +22,10 @@ def register():
     if data["role"] not in ["buyer","seller"]:
         return jsonify({"error": "Role must be buyer or seller"}),400
 
+    email = data["email"].strip().lower()    
+
     # check for duplicate email or phone
-    if User.query.filter_by(email=data["email"]).first():
+    if User.query.filter_by(email=email).first():
         return jsonify({"error" : "An account with this email already exists"}), 409
 
     if User.query.filter_by(phone=data["phone"]).first():
@@ -35,7 +37,7 @@ def register():
 
     user = User(
         name = data["name"].strip(),
-        email = data["email"].strip(),
+        email = email,
         phone = data["phone"].strip(),
         password = hashed_pw,
         role = data["role"],
@@ -90,9 +92,3 @@ def me():
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify({"user":user.to_dict()}),200
-
-
-
-
-
-
