@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api";
+import { useAuth } from "../context/useAuth";
 
 const CONDITION_STYLES = {
     Good: "bg-green-100 text-green-700",
@@ -11,9 +12,9 @@ const CONDITION_STYLES = {
 
 
 
-
-
 export default function Browse() {
+    const navigate = useNavigate();
+    const { user, logout } = useAuth();
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('All')
     const [condition, setCondition] = useState('All')
@@ -40,6 +41,9 @@ export default function Browse() {
     const conditions = ['All', ...new Set(listings.map((item) => item.condition).filter(Boolean))]
     const locations = ['All', ...new Set(listings.map((item) => item.location).filter(Boolean))]
 
+    const isAuthenticated = Boolean(user);
+    const dashboardPath = user?.role === "seller" ? "/seller/dashboard" : "/buyer/dashboard";
+
     const filtered = listings.filter((item) => {
         const matchSearch = item.title.toLowerCase().includes(search.toLowerCase())
         const matchCategory = category === 'All' || item.category === category;
@@ -61,6 +65,11 @@ export default function Browse() {
         setLocation('All')
         setMaxPrice(50000)
         setSearch('')
+    }
+
+    function handleLogout() {
+        logout();
+        navigate('/');
     }
 
     const activeFilterCount = [
@@ -176,18 +185,37 @@ export default function Browse() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Link
-                        to='/login'
-                        className="hidden md:block text-white/80 hover:text-white text-sm font-medium"
-                        >
-                            Log in
-                        </Link>
-                        <Link
-                        to='/signup?role=seller'
-                        className="text-xs sm:text-sm font-bold px-3 py-2 rounded-full bg-[#f5a623] text-[#1a1a1a] hover:bg-amber-500 transition-all"
-                        >
-                           + List Item 
-                        </Link>
+                        {isAuthenticated ? (
+                            <>
+                                <Link
+                                    to={dashboardPath}
+                                    className="hidden md:block text-white/80 hover:text-white text-sm font-medium"
+                                >
+                                    {user?.role === "seller" ? "Seller Dashboard" : "Buyer Dashboard"}
+                                </Link>
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-xs sm:text-sm font-bold px-3 py-2 rounded-full bg-white/15 text-white hover:bg-white/20 transition-all"
+                                >
+                                    Log out
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to='/login'
+                                    className="hidden md:block text-white/80 hover:text-white text-sm font-medium"
+                                >
+                                    Log in
+                                </Link>
+                                <Link
+                                    to='/signup?role=seller'
+                                    className="text-xs sm:text-sm font-bold px-3 py-2 rounded-full bg-[#f5a623] text-[#1a1a1a] hover:bg-amber-500 transition-all"
+                                >
+                                   + List Item 
+                                </Link>
+                            </>
+                        )}
                     </div>
 
                 </div>

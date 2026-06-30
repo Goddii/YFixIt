@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api";
+import { useAuth } from "../context/useAuth";
 
 const CATEGORIES = ["Phones", "Laptops", "Tablets", "TVs", "Audio", "Appliances", "Other"];
 const CONDITIONS = ["Good", "Fair", "Broken"];
@@ -37,6 +38,7 @@ function formatPostedDate(value) {
 
 export default function SellerDashboard() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [seller, setSeller]         = useState(null);
   const [listings, setListings]     = useState([]);
   const [activeTab, setActiveTab]   = useState("listings"); // listings | new | stats
@@ -196,7 +198,7 @@ export default function SellerDashboard() {
   }
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    logout();
     navigate("/");
   }
 

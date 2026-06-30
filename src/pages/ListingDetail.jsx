@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
+import { useAuth } from "../context/useAuth";
 
 const CONDITION_STYLES = {
   Good: {
@@ -67,6 +68,7 @@ function ListingImage({ item, size = "large" }) {
 export default function ListingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [listing, setListing] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -93,7 +95,7 @@ export default function ListingDetail() {
             const profile = await api.me();
             if (mounted) setCheckoutPhone(profile.user?.phone || "");
           } catch {
-            localStorage.removeItem("token");
+            if (mounted) setCheckoutPhone("");
           }
         }
       } catch (err) {

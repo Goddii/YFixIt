@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api";
+import { useAuth } from "../context/useAuth";
 
 const CONDITION_STYLES = {
   Good:   "bg-green-100 text-green-700",
@@ -16,6 +17,7 @@ const STATUS_STYLES = {
 
 export default function BuyerDashboard() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState("listings");
   const [buyer, setBuyer] = useState(null);
   const [listings, setListings] = useState([]);
@@ -62,7 +64,7 @@ export default function BuyerDashboard() {
   }, [navigate]);
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    logout();
     navigate("/");
   }
 

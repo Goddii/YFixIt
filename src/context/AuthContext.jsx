@@ -4,37 +4,39 @@ import { AuthContext } from "./AuthContextValue";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
-
-  // on first mount checks if a token exist in localstorage
   useEffect(() => {
-    let mounted = true
+    let mounted = true;
 
     async function restoreSession() {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
+
       if (!token) {
-        if (mounted) setLoading(false)
-          return;
+        if (mounted) {
+          setUser(null);
+          setLoading(false);
+        }
+        return;
       }
 
       try {
-        const data = await api.me()
+        const data = await api.me();
         if (mounted) setUser(data.user);
       } catch (err) {
-        //token invalid or expired
-        localStorage.removeItem("token")
+        if (mounted) setUser(null);
+        localStorage.removeItem("token");
       } finally {
-        if (mounted) setLoading(false)
+        if (mounted) setLoading(false);
       }
     }
-    restoreSession()
+
+    restoreSession();
 
     return () => {
       mounted = false;
     };
-  }, [] 
-  )
+  }, []);
 
   async function login(credentials) {
     const data = await api.login(credentials);
@@ -55,8 +57,10 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+  const isAuthenticated = Boolean(user);
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, isAuthenticated, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
